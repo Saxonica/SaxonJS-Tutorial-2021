@@ -1,0 +1,497 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  // Make sure the build script can find the DocBook classes
+  dependencies {
+    classpath group: 'org.docbook', name: 'docbook-xslTNG', version: '1.5.4'
+  }
+}
+
+plugins {
+  id "java"
+  id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.3'
+}
+
+import java.nio.file.*
+import java.nio.charset.StandardCharsets
+import org.gradle.internal.os.OperatingSystem
+import com.nwalsh.gradle.saxon.SaxonXsltTask
+
+repositories {
+  mavenCentral()
+  maven {
+    url "https://dev.saxonica.com/maven"
+  }
+}
+
+configurations {
+  saxonj.extendsFrom(implementation)
+  docbook.extendsFrom(implementation)
+}
+
+ext {
+  tools = [
+    "python3": OperatingSystem.current().isWindows() ? "python3.exe" : "python3",
+    "docker": OperatingSystem.current().isWindows() ? "docker.exe" : "docker",
+    "node": OperatingSystem.current().isWindows() ? "node" : "node",
+    "npm": OperatingSystem.current().isWindows() ? "npm" : "npm"
+  ]
+  saxonLicenseDir = "${projectDir}/lib"
+}
+
+dependencies {
+  implementation (
+    [group: "com.saxonica", name: "Saxon-EE", version: "10.6"],
+  )
+  saxonj (
+    files(saxonLicenseDir),
+    [group: 'org.docbook', name: 'schemas-docbook', version: '5.2b10a4'],
+    [group: 'org.docbook', name: 'docbook-xslTNG', version: '1.5.4']
+  )
+}
+
+saxon.configure {
+  entityResolverClass "org.xmlresolver.Resolver"
+  uriResolverClass "org.xmlresolver.Resolver"
+  sourceSaxParser "org.xmlresolver.tools.ResolvingXMLReader"
+  stylesheetSaxParser "org.xmlresolver.tools.ResolvingXMLReader"
+  initializer 'org.docbook.xsltng.extensions.Register'
+}
+
+tools.keySet().each { tool ->
+  if (!ext.has(tool)) {
+    System.getenv("PATH").split(System.getProperty("path.separator")).each { dir ->
+      def fn = new File(dir + "/" + tools[tool])
+      if (fn.exists() && fn.canExecute()) {
+        ext.set(tool, fn.toString())
+      }
+    }
+    if (!ext.has(tool)) {
+      ext.set(tool, null)
+    }
+  }
+}
+
+println("Building with Java version ${System.getProperty('java.version')}")
+
+// ============================================================
+
+void killContainer() {
+  if (docker == null) {
+    throw new GradleException("Cannot run Docker without ${tools['docker']}")
+  }
+
+  def kill = []
+  ProcessBuilder pb = new ProcessBuilder()
+    .command(docker,
+             "ps", "-a", "--format={{.ID}} {{.Image}} {{.Status}}")
+  Process proc = pb.start();
+
+  BufferedReader reader = new BufferedReader(
+    new InputStreamReader(proc.getInputStream()))
+
+  String line = reader.readLine()
+  while (line != null) {
+    def parts = line.split(" ")
+    if (parts.length > 2) {
+      def id = parts[0]
+      def image = parts[1]
+      def status = parts[2]
+
+      if (image.contains(dockerImage)) {
+        kill += id
+      }
+
+      line = reader.readLine()
+    }
+  }
+
+  proc.waitFor()
+
+  reader.close()
+  kill.each { id ->
+    pb = new ProcessBuilder()
+      .command(docker, "kill", id)
+    proc = pb.start();
+    proc.waitFor()
+  }
+}
+
+// ============================================================
+// Tasks to interact with the python web server
+
+task checkPython() {
+  doFirst {
+    if (python3 == null) {
+      throw new GradleException("Cannot run web server without ${tools['python3']}")
+    }
+  }
+}
+
+task pythonServerStop(dependsOn: ['checkPython']) {
+  // If you kill the Gradle process with Ctrl-C, the Python server
+  // sometimes hangs around in the background. Before we attempt to
+  // start it (again?), we tell it to stop. If our attempt to tell it
+  // to stop fails, we don't care (either it isn't running or
+  // something worse is going on).
+  doLast {
+    try {
+      URL url = new URL("http://localhost:${serverPort}/stop");
+      URLConnection con = url.openConnection();
+      HttpURLConnection http = (HttpURLConnection) con;
+      http.setRequestMethod("POST");
+      http.setDoOutput(true);
+      byte[] out = "Stop".getBytes(StandardCharsets.UTF_8)
+      http.setFixedLengthStreamingMode(out.length)
+      http.setRequestProperty("Content-type", "text/plain");
+      http.connect()
+      OutputStream os = http.getOutputStream()
+      os.write(out)
+      os.close()
+      // Give the server a chance to finish up.
+      Thread.sleep(1000)
+    } catch (Exception ex) {
+      // nevermind
+    }
+  }
+}
+
+task pythonServerStart(dependsOn: ['pythonServerStop']) {
+  // We do this the hard way so that we can report the unbuffered
+  // output from the script in realtime.
+  doLast {
+    def builder = new ProcessBuilder([python3, "python/server.py"])
+    def process = builder.start()
+    def stdoutReader = new ProcessOutputReader(process.getInputStream())
+    def stderrReader = new ProcessOutputReader(process.getErrorStream())
+
+    Thread stdoutThread = new Thread(stdoutReader)
+    Thread stderrThread = new Thread(stderrReader)
+
+    stdoutThread.start()
+    stderrThread.start()
+
+    process.waitFor()
+    stdoutThread.join()
+    stderrThread.join()
+  }
+}
+
+class ProcessOutputReader implements Runnable {
+  private InputStream is;
+
+  public ProcessOutputReader(InputStream is) {
+    this.is = is
+  }
+
+  public void run() {
+    BufferedReader br = new BufferedReader(new InputStreamReader(is))
+    String line = br.readLine()
+    while (line != null) {
+      println(line)
+      line = br.readLine()
+    }
+  }
+}
+
+// ============================================================
+// Tasks to interact with Node/Docker
+
+task nodeServerStart(type: Exec) {
+  def dir = projectDir
+  if (rootProject.ext.has('dir')) {
+    dir = Paths.get(projectDir.toString()).resolve(rootProject.ext.dir)
+  }
+
+  workingDir = "node"
+  commandLine "node", "server.js"
+  ignoreExitValue = true
+}
+
+// ============================================================
+// Tasks to interact with Node/Docker
+
+task buildContainer(type: Exec) {
+  doFirst {
+    if (docker == null) {
+      throw new GradleException("Cannot run Docker without ${tools['docker']}")
+    }
+  }
+
+  workingDir "${projectDir}/node"
+  commandLine docker, "build", "-t", "${dockerImage}:${imageTag}", "."
+}
+
+task pullContainer() {
+  def found = false
+
+  doFirst {
+    if (docker == null) {
+      throw new GradleException("Cannot run Docker without ${tools['docker']}")
+    }
+  }
+
+  doLast {
+    ProcessBuilder pb = new ProcessBuilder()
+      .command(docker, "images", "--format={{.Repository}} {{.Tag}}")
+    Process proc = pb.start();
+
+    BufferedReader reader = new BufferedReader(
+      new InputStreamReader(proc.getInputStream()))
+
+    String line = reader.readLine()
+    while (!found && line != null) {
+      def parts = line.split(" ")
+      if (parts.length > 1) {
+        def repo = parts[0]
+        def tag = parts[1]
+        found = found || (repo == dockerImage && tag == imageTag)
+      }
+      line = reader.readLine()
+    }
+
+    proc.waitFor()
+    reader.close()
+  }
+
+  doLast {
+    if (!found) {
+      println("Attempting to pull ${dockerImage}:${imageTag}")
+      exec {
+        commandLine docker, "pull", "${dockerImage}:${imageTag}"
+      }
+    }
+  }
+}
+
+task dockerServerStart(type: Exec, dependsOn: ['pullContainer']) {
+  def dir = "${projectDir}"
+
+  if (rootProject.ext.has('dir')) {
+    dir = Paths.get(projectDir.toString()).resolve(rootProject.ext.dir)
+  }
+
+  doFirst {
+    killContainer()
+  }
+
+  doLast {
+    killContainer()
+  }
+
+  commandLine docker,
+    "run", "--rm", "-p", "${serverPort}:80",
+    "-v", "${dir}:/src",
+    "-e", "ROOTDIR=/src",
+    "-e", "PORT=80",
+    "${dockerImage}:${imageTag}"
+  ignoreExitValue = true
+}
+
+task dockerServerStop() {
+  doLast {
+    killContainer()
+  }
+}
+
+task parseCompilerOptions() {
+  // -Pxsl= -Pexport= -Pdir=
+
+  def xslFile = null
+  def exportFile = null
+  def sourceDir = null
+
+  if (rootProject.ext.has('xsl')) {
+    xslFile = rootProject.ext.xsl
+  }
+
+  if (rootProject.ext.has('export')) {
+    exportFile = rootProject.ext.export
+  } else {
+    if (xslFile != null) {
+      exportFile = xslFile.replace(".xsl", ".sef.json")
+    }
+  }
+  if (rootProject.ext.has('dir')) {
+    sourceDir = Paths.get(projectDir.toString()).resolve(rootProject.ext.dir)
+  } else {
+    sourceDir = projectDir.toString()
+  }
+
+  doFirst {
+    if (xslFile == null) {
+      println("You must specify an XSLT file with -Pxsl=")
+    }
+    if (sourceDir == null) {
+      println("You must specify the base directory with -Pdir=")
+    }
+  }
+
+  doLast {
+    if (xslFile != null && exportFile != null && sourceDir != null) {
+      parseCompilerOptions.ext.xslFile = xslFile
+      parseCompilerOptions.ext.exportFile = exportFile
+      parseCompilerOptions.ext.sourceDir = sourceDir
+    } else {
+      throw new GradleException("Missing compile parameters")
+    }
+  }
+}
+
+task eej(dependsOn: ['parseCompilerOptions']) {
+  doLast {
+    def xslFile = parseCompilerOptions.xslFile
+    def exportFile = parseCompilerOptions.exportFile
+    def sourceDir = parseCompilerOptions.sourceDir
+
+    javaexec {
+      classpath = configurations.saxonj
+      mainClass = "com.saxonica.Transform"
+      args "-xsl:${xslFile}",
+        "-export:${exportFile}",
+        "-target:JS", "-nogo", "-relocate:on", "-ns:##html5"
+    }
+  }
+}
+
+task node_xslt3(dependsOn: ['parseCompilerOptions']) {
+  doLast {
+    def xslFile = parseCompilerOptions.xslFile
+    def exportFile = parseCompilerOptions.exportFile
+    def sourceDir = parseCompilerOptions.sourceDir
+
+    def args = ["node", "node/node_modules/xslt3/xslt3.js",
+                "-xsl:${xslFile}", "-export:${exportFile}",
+                "-nogo", "-ns:##html5"]
+    exec {
+      commandLine args
+    }
+  }
+}
+
+task docker_xslt3(dependsOn: ['parseCompilerOptions', 'pullContainer']) {
+  doLast {
+    def xslFile = parseCompilerOptions.xslFile
+    def exportFile = parseCompilerOptions.exportFile
+    def sourceDir = parseCompilerOptions.sourceDir
+
+    def args = [docker, "run", "--rm",
+                "-v", "${sourceDir}:/src",
+                "${dockerImage}:${imageTag}",
+                "node", "node_modules/xslt3/xslt3.js",
+                "-xsl:/src/${xslFile}", "-export:/src/${exportFile}",
+                "-nogo", "-ns:##html5"]
+    exec {
+      commandLine args
+    }
+  }
+}
+
+task checkConfig() {
+  doLast {
+    if (rootProject.ext.has('docker')) {
+      println("Found Docker: ${rootProject.ext.get('docker')}")
+    } else {
+      println("Unable to find Docker (docker)")
+    }
+    if (rootProject.ext.has('python3')) {
+      println("Found Python: ${rootProject.ext.get('python3')}")
+    } else {
+      println("Unable to find Python 3 (python3)")
+    }
+    if (rootProject.ext.has('node') && rootProject.ext.has('npm')) {
+      println("Found Node: ${rootProject.ext.get('node')} and ${rootProject.ext.get('npm')}")
+    } else {
+      println("Unable to find Node (node and npm)")
+    }
+  }
+}
+
+// ============================================================
+// Just my usual testing tasks.
+
+task helloWorld() {
+  /*
+  doLast {
+    configurations.saxonj.resolve().each { path ->
+      println(path)
+    }
+  }
+   */
+  doLast {
+    println("Hello, world")
+  }
+}
+
+// ============================================================
+// Below here are the templates for building the presentation
+
+task presentation(type: SaxonXsltTask, dependsOn: ["presentation_resources"]) {
+  inputs.files fileTree(dir: "${projectDir}/src/main/xml")
+  outputs.files fileTree(dir: "${projectDir}/presentation")
+  input "${projectDir}/src/main/xml/presentation.xml"
+  output "${projectDir}/presentation/index.html"
+  stylesheet "${projectDir}/tools/presentation.xsl"
+  parameters (
+    'debug': '',
+    'chunk': 'index.html',
+    'chunk-output-base-uri': "${projectDir}/presentation/",
+    'mediaobject-input-base-uri': "file:${projectDir}/src/main/xml/",
+    'resource-base-uri': '/presentation/',
+    'annotation-style': 'javascript',
+    'profile-outputformat': 'online',
+    'persistent-toc': true,
+  )
+}
+
+task presentation_resources(dependsOn: ["local_presentation_resources"]) {
+  def dbjar = null
+  configurations.saxonj.each { path ->
+    if (path.toString().contains("docbook-xslTNG")) {
+      dbjar = path
+    }
+  }
+
+  doLast {
+    if (dbjar == null) {
+      throw new GradleException("Failed to locate DocBook xslTNG jar file")
+    }
+    copy {
+      into "${projectDir}/presentation"
+      from ({ zipTree(dbjar.toString()) }) {
+        include "org/docbook/xsltng/resources/**"
+      }
+      eachFile { fileCopyDetails ->
+        def originalPath = fileCopyDetails.path
+        fileCopyDetails.path = originalPath.replace('org/docbook/xsltng/resources/', '')
+      }
+    }
+  }
+
+  doLast {
+    delete "${projectDir}/presentation/org"
+  }
+}
+presentation_resources.onlyIf {
+  !file("${projectDir}/presentation/css/docbook.css").exists()
+}
+
+task local_presentation_resources() {
+  doFirst {
+    copy {
+      into "${projectDir}/presentation"
+      from ("${projectDir}/src/main/resources")
+    }
+  }
+
+  doFirst {
+    copy {
+      into "${projectDir}/presentation"
+      from ("${projectDir}/src/main/xml") {
+        include "*.png"
+      }
+    }
+  }
+}

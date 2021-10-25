@@ -1,0 +1,52 @@
+@media screen {
+    @import url("https://fonts.googleapis.com/css?family=B612+Mono&display=swap");
+    @import url("https://fonts.googleapis.com/css?family=Noto+Sans&display=swap");
+    @import url("https://fonts.googleapis.com/css?family=Noto+Serif&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+}
+
+:root {
+    --symbol-fonts: "Arial Unicode", "Apple Symbols", "Symbol", "Symbola_hint";
+    --body-family: "Noto Serif", serif, var(--symbol-fonts);
+    --title-family: "Lobster", cursive, var(--symbol-fonts);
+    --mono-family: "B612 Mono", monospace, var(--symbol-fonts);
+}
+
+html {
+    font-size: 16pt;
+    background-color: rgb(228, 238, 240);
+}
+
+body {
+    width: 100%;
+    padding-bottom: 1in;
+}
+
+main {
+    max-width: 50em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--title-family);
+}
+
+h1 {
+    text-align: center;
+    background-color: rgb(193, 206,221);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+#ingredients {
+    border: 1px solid black;
+    padding: 1em;
+    padding-bottom: 0.25em;
+    border-radius: 0.75em;
+}
+
+#ingredients h2 {
+    margin-top: 0;
+}

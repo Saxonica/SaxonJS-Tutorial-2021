@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{{TITLE}}</title>
+<meta charset="utf-8" />
+<meta name="category" content="{{CATEGORY}}"/>
+<meta name="credit" content="{{CREDIT}}"/>
+<link rel="stylesheet" href="/css/recipe.css"/>
+</head>
+<body>
+<main id="main">
+<p>Serves <span id="serves">{{SERVINGS}}</span>.</p>
+<div id="ingredients">
+<ul>
+<li x-quantity="" x-units=""><span></span></li>
+<li x-quantity="" x-units=""><span></span></li>
+<li x-quantity="" x-units=""><span></span></li>
+</ul>
+</div>
+<div id="directions">
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,5 @@
+/.gradle/
+/build/
+/node/node_modules/
+.mypy_cache/
+
