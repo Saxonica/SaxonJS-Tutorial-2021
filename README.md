@@ -229,8 +229,9 @@ Docker” then you’re good. If your reaction was “what’s a Docker?”
 that’s totally cool too, but you are likely to find either of the
 preceding options a little easier to use.
 
-If Docker is for you, open a shell (or command) window and navigate to
-the directory where you checked out this repository.
+If Docker is for you, make sure the Docker engine is running, then
+open a shell (or command) window and navigate to the directory where
+you checked out this repository.
 
 If you’ve never pulled a container from GitHub, you’ll have to authenticate first.
 Follow [the instructions](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry) from GitHub.
