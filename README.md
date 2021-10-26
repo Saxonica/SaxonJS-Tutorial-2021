@@ -353,7 +353,7 @@ Type this:
 something, you should type `.\gradlew` at the beginning instead, using
 a backslash instead of a forward slash.)
 
-If you’ve never run Gradle before, you’ll get a bunch of messages
+If you’ve never run Gradle before, it may take a while. You’ll get a bunch of messages
 about things that are being downloaded. That’ll only happen the first
 time. The `gradlew` command, short for the “Gradle wrapper” makes
 repositories like this self contained, so you don’t have to worry
