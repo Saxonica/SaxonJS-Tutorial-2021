@@ -458,7 +458,7 @@ task presentation(type: SaxonXsltTask, dependsOn: ['validatePresentation']) {
     'chunk': 'index.html',
     'chunk-output-base-uri': "${projectDir}/presentation/",
     'mediaobject-input-base-uri': "file:${projectDir}/presentation/",
-    'resource-base-uri': '/presentation/',
+    'resource-base-uri': '../presentation/',
     'annotation-style': 'javascript',
     'profile-outputformat': 'online',
     'persistent-toc': true,
