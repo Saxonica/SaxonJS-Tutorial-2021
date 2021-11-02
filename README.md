@@ -1,5 +1,14 @@
 # SaxonJS-Tutorial-2021, version 0.9.9
-## 2 November, 2021
+
+Last updated on 2 November, 2021.
+
+**Table of contents**
++ [Background](#Background)
++ [Prerequisites](#Prerequisites)
++ [Starting a web server](#Starting-a-web-server)
++ [Running a Java program](#Running-a-Java-program)
++ [Orient yourself!](#Orient-yourself)
++ [Gradle task summary](#Gradle-task-summary)
 
 Welcome! This is the repository for the SaxonJS tutorial
 (that will be) presented at
@@ -138,7 +147,7 @@ to make all of these options work, any one of them will do. There’s no
 already, you _can_ just use that, but the servers we’re providing here
 have some automation features built in that we’ll be relying on to
 make the tutorial experience a little more streamlined. We encourage you to
-setup one of these.)
+set up one of these.)
 
 ### Use Python3
 
@@ -236,7 +245,7 @@ you checked out this repository.
 
 If you’ve never pulled a container from GitHub, you’ll have to authenticate first.
 Follow [the instructions](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry) from GitHub.
-(Go ahead and setup a personal access token for this purpose. We’re not building an automated
+(Go ahead and set up a personal access token for this purpose. We’re not building an automated
 workflow so the remarks about `GITHUB_TOKEN`s don’t really apply.)
 
 After you’ve authenticated, pull the container we built for this
@@ -373,6 +382,31 @@ BUILD SUCCESSFUL in 869ms
 
 Congratulations, you’ve got a working Java environment and you’re
 “tutorial ready!”
+
+# Orient yourself!
+
+There are about five windows you’ll want to be able to see while you’re doing
+the tutorial:
+
+<p width="100%" align="center">
+  <img width="80%" alt="Window setup" src="/src/main/resources/orientation.jpg?raw=true" />
+</p>
+
+1. The text editor is where you’ll be writing the answers to the exercises.
+2. The browser results are the pages you’ll be loading (and reloading) to check your work.
+3. The server logs are where you’ll see progress and error messages.
+4. The exercise README files have code snippets that you can cut and paste to the exercises.
+5. Us. Or, if you’re not looking at this during _Declarative Amsterdam_
+   on the morning of 4 November, 2021, at least
+   [the presentation](https://saxonica.github.io/SaxonJS-Tutorial-2021/presentation/).
+   
+If you have multiple screens, you’ll almost certainly benefit from
+spreading the windows around so that you can see them simultaneously.
+Barring that, you may want to close some other applications so that
+there are fewer windows to switch between.
+
+It can definitely be confusing, so anything you can do to make it
+easier will, well, make it easier!
 
 # Gradle task summary
 
