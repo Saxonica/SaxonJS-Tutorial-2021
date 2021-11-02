@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<book xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xml:id="book" version="5.1">
+<info>
+  <title>SaxonJS Tutorial</title>
+  <abstract>
+    <para>…</para>
+  </abstract>
+  <author>
+    <personname>
+      <firstname>Norm</firstname>
+      <surname>Tovey-Walsh</surname>
+    </personname>
+    <affiliation>
+      <orgname>Saxonica</orgname>
+    </affiliation>
+    <email>norm@saxonica.com</email>
+  </author>
+  <author>
+    <personname>
+      <firstname>Debbie</firstname>
+      <surname>Lockett</surname>
+    </personname>
+    <affiliation>
+      <orgname>Saxonica</orgname>
+    </affiliation>
+    <email>debbie@saxonica.com</email>
+  </author>
+  <confgroup>
+    <conftitle>Declarative Amsterdam 2021</conftitle>
+  </confgroup>
+  <pubdate>2021-11-04</pubdate>
+  <copyright>
+    <year>2021</year>
+    <holder>Saxonica, Ltd</holder>
+  </copyright>
+  <?db xlink-style="javascript" page-style="verso"?>
+</info>
+
+<chapter>
+<title>What is an SaxonJS?</title>
+
+<itemizedlist>
+<listitem>
+<para>SaxonJS is an XSLT 3.0 processor written (mostly) in JavaScript.
+</para>
+</listitem>
+<listitem>
+<para>It runs both in the browser and on Node.js
+</para>
+</listitem>
+</itemizedlist>
+<mediaobject>
+<imageobject>
+<imagedata fileref="../presentation/SaxonJSDiagram.svg"/>
+</imageobject>
+</mediaobject>
+</chapter>
+
+<chapter>
+<title>Tutorial setup</title>
+
+<para>The tutorial is available from the GitHub repository: <link
+xlink:href="https://github.com/Saxonica/Saxon-JS-Tutorial-2021"/>. The
+README describes a number of options, but we’ll try the simplest thing
+first.
+</para>
+
+<orderedlist>
+<listitem>
+<para>Open up a shell window and navigate to the directory where
+you cloned the repository.</para>
+</listitem>
+<listitem>
+<para>Run <code>./gradlew pythonServerStart</code> (on Windows, use
+<code>.\gradlew</code> everwhere we say <code>./gradlew</code>!</para>
+</listitem>
+<listitem>
+<para>Open <link xlink:href="http://localhost:9000/hello"/> in your
+favorite (JavaScript enabled) web browser.</para>
+</listitem>
+</orderedlist>
+
+<para>Do you see a “Click me” button? Does it work?</para>
+
+</chapter>
+
+<chapter>
+<title>Remaining slides</title>
+
+<para>The remaining slides will be available on Thursday morning.</para>
+</chapter>
+
+</book>
+

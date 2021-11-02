@@ -6,18 +6,21 @@ buildscript {
   // Make sure the build script can find the DocBook classes
   dependencies {
     classpath group: 'org.docbook', name: 'docbook-xslTNG', version: '1.5.4'
+    classpath group: 'org.docbook', name: 'schemas-docbook', version: '5.2b11'
   }
 }
 
 plugins {
   id "java"
   id 'com.nwalsh.gradle.saxon.saxon-gradle' version '0.9.3'
+  id 'com.nwalsh.gradle.relaxng.validate' version '0.0.6'
 }
 
 import java.nio.file.*
 import java.nio.charset.StandardCharsets
 import org.gradle.internal.os.OperatingSystem
 import com.nwalsh.gradle.saxon.SaxonXsltTask
+import com.nwalsh.gradle.relaxng.validate.RelaxNGValidateTask
 
 repositories {
   mavenCentral()
@@ -29,6 +32,7 @@ repositories {
 configurations {
   saxonj.extendsFrom(implementation)
   docbook.extendsFrom(implementation)
+  validateRuntime.extendsFrom(testImplementation)
 }
 
 ext {
@@ -428,17 +432,32 @@ task helloWorld() {
 // ============================================================
 // Below here are the templates for building the presentation
 
-task presentation(type: SaxonXsltTask, dependsOn: ["presentation_resources"]) {
+task xincludePresentation(type: SaxonXsltTask, dependsOn: ['presentation_resources']) {
   inputs.files fileTree(dir: "${projectDir}/src/main/xml")
-  outputs.files fileTree(dir: "${projectDir}/presentation")
+
   input "${projectDir}/src/main/xml/presentation.xml"
+  stylesheet "${projectDir}/tools/xinclude.xsl"
+  output "${buildDir}/presentation.xml"
+}
+
+task validatePresentation(type: RelaxNGValidateTask, dependsOn: ['xincludePresentation']) {
+  input "${buildDir}/presentation.xml"
+  schema "${projectDir}/tools/docbook.rng"
+  output "${buildDir}/validated.xml"
+}
+
+task presentation(type: SaxonXsltTask, dependsOn: ['validatePresentation']) {
+  //outputs.upToDateWhen { false }
+  outputs.files fileTree(dir: "${projectDir}/presentation")
+  input "${buildDir}/validated.xml"
   output "${projectDir}/presentation/index.html"
   stylesheet "${projectDir}/tools/presentation.xsl"
   parameters (
     'debug': '',
+    // 'debug': 'chunks,chunk-cleanup,intra-chunk-refs,intra-chunk-links',
     'chunk': 'index.html',
     'chunk-output-base-uri': "${projectDir}/presentation/",
-    'mediaobject-input-base-uri': "file:${projectDir}/src/main/xml/",
+    'mediaobject-input-base-uri': "file:${projectDir}/presentation/",
     'resource-base-uri': '/presentation/',
     'annotation-style': 'javascript',
     'profile-outputformat': 'online',
