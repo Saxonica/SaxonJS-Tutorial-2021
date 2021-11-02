@@ -1,14 +1,11 @@
-# SaxonJS-Tutorial-2021, version 0.9.0
-## 25 October, 2021
+# SaxonJS-Tutorial-2021, version 0.9.9
+## 2 November, 2021
 
-(This version of the tutorial has been quietly made public in order to
-get feedback about the setup and install instructions. The repository
-won’t be complete until shortly before the presentation.)
+Welcome! This is the repository for the SaxonJS tutorial
+(that will be) presented at
+[Declarative Amsterdam](https://declarative.amsterdam/), 2021.
 
-Welcome! This is the SaxonJS tutorial presented at [Declarative
-Amsterdam](https://declarative.amsterdam/), 2021.
-
-In this repository you (will eventually) find all of the training
+In this repository you will (eventually) find all of the training
 materials used in the course, including the slides, the exercises, and
 the answers to the exercises.
 
