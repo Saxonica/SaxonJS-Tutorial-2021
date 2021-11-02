@@ -1,17 +1,12 @@
-/* DocBook xslTNG version 1.5.4
+/* DocBook xslTNG version 1.3.0a1
  *
  * This is pygments.css. This file is generated with Pygments.
  *
  * See https://xsltng.docbook.org/
  *
  */
-pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
+.highlight  { background: #f8f8f8; }
 .highlight .c { color: #408080; font-style: italic } /* Comment */
 .highlight .err { border: 1px solid #FF0000 } /* Error */
 .highlight .k { color: #008000; font-weight: bold } /* Keyword */
@@ -79,13 +74,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
-pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .materials-dark .highlight .hll { background-color: #49483e }
-.materials-dark .highlight { background: #232629; color: #cccccc }
+.materials-dark .highlight  { background: #232629; color: #cccccc }
 .materials-dark .highlight .c { color: #777777; font-style: italic } /* Comment */
 .materials-dark .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .materials-dark .highlight .k { color: #7686bb; font-weight: bold } /* Keyword */
@@ -132,13 +122,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .materials-dark .highlight .vi { color: #7AB4DB; font-weight: bold } /* Name.Variable.Instance */
 .materials-dark .highlight .vm { color: #7AB4DB; font-weight: bold } /* Name.Variable.Magic */
 .materials-dark .highlight .il { color: #4FB8CC } /* Literal.Number.Integer.Long */
-pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .materials-light .highlight .hll { background-color: #ffffcc }
-.materials-light .highlight { background: #ffffff; color: #111111 }
+.materials-light .highlight  { background: #ffffff; color: #111111 }
 .materials-light .highlight .c { color: #008800; font-style: italic } /* Comment */
 .materials-light .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .materials-light .highlight .k { color: #353580; font-weight: bold } /* Keyword */
