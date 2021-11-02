@@ -9,6 +9,10 @@ In this repository you will (eventually) find all of the training
 materials used in the course, including the slides, the exercises, and
 the answers to the exercises.
 
+You can peek at [the slides](https://saxonica.github.io/SaxonJS-Tutorial-2021/presentation/)
+online, but if you’re planning on taking the tutorial, please follow the
+instructions for setting things up on your local system.
+
 Start by cloning this repository, or downloading the ZIP file and
 unzipping it somewhere on your local system.
 
