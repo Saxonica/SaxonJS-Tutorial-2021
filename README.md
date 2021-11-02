@@ -395,7 +395,9 @@ the tutorial:
 1. The text editor is where you’ll be writing the answers to the exercises.
 2. The browser results are the pages you’ll be loading (and reloading) to check your work.
 3. The server logs are where you’ll see progress and error messages.
-4. The exercise README files have code snippets that you can cut and paste to the exercises.
+4. The exercise README files have code snippets that you can cut and
+   paste to the exercises. (We found it most useful to display these
+   from the Github website directly rather than opening them locally.)
 5. Us. Or, if you’re not looking at this during _Declarative Amsterdam_
    on the morning of 4 November, 2021, at least
    [the presentation](https://saxonica.github.io/SaxonJS-Tutorial-2021/presentation/).
