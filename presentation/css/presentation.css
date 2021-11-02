@@ -1,0 +1,257 @@
+@media screen {
+    @import url("https://fonts.googleapis.com/css?family=B612+Mono&display=swap");
+    @import url("https://fonts.googleapis.com/css?family=Noto+Sans&display=swap");
+    @import url("https://fonts.googleapis.com/css?family=Noto+Serif&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+}
+
+:root {
+    --symbol-fonts: "Arial Unicode", "Apple Symbols", "Symbol", "Symbola_hint";
+    --body-family: "Noto Serif", serif, var(--symbol-fonts);
+    --title-family: "Oswald", sans-serif, var(--symbol-fonts);
+    --mono-family: "B612 Mono", monospace, var(--symbol-fonts);
+}
+
+html {
+    font-size: 16pt;
+}
+
+main {
+    max-width: 90%;
+}
+
+article header {
+    min-height: 700px;
+}
+
+h1 {
+    margin-top: 2rem;
+}
+
+article header h1 {
+    padding-top: 1em;
+    line-height: 150%;
+}
+
+article header .affiliation {
+    font-size: 1.5rem;
+    padding-top: 1rem;
+}
+
+article header .email {
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+article header .icons {
+    padding-top: 1em;
+    text-align: center;
+}
+
+#xavier {
+    width: 500px;
+    float: right;
+}
+
+img.float {
+    width: 350px;
+    float: right;
+}
+
+.list-of-titles {
+    display: none;
+}
+
+nav.tocopen span {
+    display: none;
+}
+
+nav.tocopen:before {
+  content: "☰";
+}
+
+/* Hacks for the home page */
+
+.author h3 {
+    text-align: center;
+}
+
+p.affiliation {
+    margin-top: 0.1em;
+    text-align: center;
+}
+
+p.pubdate {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.confgroup {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.conftitle {
+    font-style: italic;
+}
+
+.confdates::before {
+    content: ", ";
+}
+
+article.homepage header {
+    text-align: left;
+}
+
+article.homepage header h1 {
+    margin-top: 0;
+    font-size: 2.4rem;
+}
+
+.chapter,
+.appendix {
+    font-size: 28pt;
+    line-height: 1.4;
+}
+
+.chapter h2,
+.appendix h2 {
+    font-size: 36pt;
+}
+
+.popup-annotation-body {
+    width: 80%;
+    max-height: 90%;
+    font-size: 24pt;
+}
+
+blockquote {
+    width: 75%;
+    padding: 0px 80px;
+    position: relative;
+    margin-bottom: 28px;
+}
+
+blockquote::before,
+blockquote::after {
+    top: 0;
+    bottom: 0;
+    width: 25px;
+    content: '';
+    position: absolute;
+}
+
+blockquote::before {
+    right: 100%;
+}
+
+blockquote::after {
+    left: 100%;
+}
+
+blockquote p {
+    margin: 0;
+}
+
+blockquote p::before {
+    top: -48px;
+    left: 8px;
+    content: '“';
+    font-size: 4em;
+    position: absolute;
+    color: rgb(193, 206,221);
+}
+
+blockquote .attribution {
+    padding-top: 1.5rem;
+}
+
+/* ============================================================ */
+
+nav.top {
+    width: 100%;
+    background-color: rgb(193, 206,221);
+    display: grid;
+    grid-template-columns: 33% 34% 33%;
+}
+
+nav .title {
+    font-weight: normal;
+}
+
+nav .fas {
+    font-weight: normal;
+}
+
+nav.top .nav {
+    float: left;
+    margin-left: 0.25rem;
+}
+
+nav.top .text {
+    text-align: center;
+    font-size: 18px;
+}
+
+nav.bottom {
+    min-height: 1.0rem;
+    margin-top: 2rem;
+    margin-bottom: 0px;
+    padding-top: px;
+    padding-bottom: 10px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-top-style: solid;
+    border-top-width: 1px;
+    display: grid;
+    font-size: 1.0rem;
+}
+
+.navrow {
+    display: grid;
+    grid-template-columns: 33% 34% 33%;
+}
+
+.navleft {
+    text-align: left;
+    grid-column: 1;
+}
+
+.navmiddle {
+    text-align: center;
+    grid-column: 2;
+}
+
+.navright {
+    text-align: right;
+    grid-column: 3;
+}
+
+.navrow .navtitle {
+    font-size: 18px;
+}
+
+nav .version {
+    display: none;
+}
+
+nav .title {
+    color: inherit;
+    background-color: inherit;
+}
+
+.infofooter {
+    display: none;
+}
+
+.home .infofooter {
+    display: block;
+}
+
+.sidebar code {
+    background-color: var(--sidebar-color);
+}
+
+.mediaobject {
+    text-align: center;
+}
