@@ -210,6 +210,10 @@
                 select="key('genid', $node/@db-id, $docbook)"/>
 
   <div class="infofooter">
+    <!-- This is a terrible hack -->
+    <span style='float: right;'>
+      <a title="Chapter 1" href="ch01.html"><i class="fas fa-arrow-right"></i></a>
+    </span>
     <span class="copyrightfooter">
       <xsl:apply-templates select="$docbook/db:book/db:info/db:copyright" mode="m:docbook"/>
     </span>
