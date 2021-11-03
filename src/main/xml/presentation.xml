@@ -40,7 +40,7 @@
 </info>
 
 <chapter>
-<title>What is an SaxonJS?</title>
+<title>What is SaxonJS?</title>
 
 <itemizedlist>
 <listitem>
@@ -63,7 +63,7 @@
 <title>Tutorial setup</title>
 
 <para>The tutorial is available from the GitHub repository: <link
-xlink:href="https://github.com/Saxonica/Saxon-JS-Tutorial-2021"/>. The
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021"/>. The
 README describes a number of options, but we’ll try the simplest thing
 first.
 </para>
@@ -71,11 +71,12 @@ first.
 <orderedlist>
 <listitem>
 <para>Open up a shell window and navigate to the directory where
-you cloned the repository.</para>
+you cloned the repository. (Even when you’re doing the exercises, the server
+should always be started in the “top level” directory.)</para>
 </listitem>
 <listitem>
 <para>Run <code>./gradlew pythonServerStart</code> (on Windows, use
-<code>.\gradlew</code> everwhere we say <code>./gradlew</code>!</para>
+<code>.\gradlew</code> everwhere we say <code>./gradlew</code>!)</para>
 </listitem>
 <listitem>
 <para>Open <link xlink:href="http://localhost:9000/hello"/> in your
@@ -88,10 +89,27 @@ favorite (JavaScript enabled) web browser.</para>
 </chapter>
 
 <chapter>
-<title>Remaining slides</title>
+<title>Orienting yourself</title>
 
-<para>The remaining slides will be available on Thursday morning.</para>
+<para>
+There are about five windows you’ll want to be able to see while you’re doing
+the tutorial:</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="../presentation/orientation.jpg" width="80%"/>
+</imageobject>
+</mediaobject>
+
+<para>If you have multiple screens, you’ll almost certainly benefit from
+spreading the windows around so that you can see them simultaneously.
+Barring that, you may want to close some other applications so that
+there are fewer windows to switch between.</para>
 </chapter>
+
+<xi:include href="browser.xml"/>
+<xi:include href="node.xml"/>
+<xi:include href="refs.xml"/>
 
 </book>
 

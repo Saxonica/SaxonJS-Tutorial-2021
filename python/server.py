@@ -117,7 +117,9 @@ class TutorialServer(BaseHTTPRequestHandler):
             self.wfile.write(bytes(html[0:pos], "utf-8"))
 
             self.wfile.write(bytes("<script src='/js/SaxonJS2.rt.js'></script>", "utf-8"))
-            self.wfile.write(bytes("<script>SaxonJS.transform({", "utf-8"))
+            self.wfile.write(bytes("<script>\n", "utf-8"))
+            self.wfile.write(bytes("window.onload = function() {\n", "utf-8"))
+            self.wfile.write(bytes("  SaxonJS.transform({", "utf-8"))
 
             comma = ""
             if params:
@@ -129,7 +131,8 @@ class TutorialServer(BaseHTTPRequestHandler):
             if params:
                 self.wfile.write(bytes("   stylesheetParams: %s" % json.dumps(params), "utf-8"))
 
-            self.wfile.write(bytes("}, 'async');</script>", "utf-8"))
+            self.wfile.write(bytes("}, 'async');\n", "utf-8"))
+            self.wfile.write(bytes("}\n</script>", "utf-8"))
 
             self.wfile.write(bytes(html[pos:], "utf-8"))
 

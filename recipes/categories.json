@@ -1,0 +1,5 @@
+{
+  "main": ["beef-stroganof.html", "mac-n-cheese.html", "marys-beef-stew.html", "pizza.html"],
+  "side": ["rice-a-roni.html"],
+  "candy": ["treacle-taffy.html"]
+}

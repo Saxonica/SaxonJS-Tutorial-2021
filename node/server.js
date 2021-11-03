@@ -86,7 +86,9 @@ function patch(request, response, data, query) {
   }
 
   let script = "<script src='/js/SaxonJS2.rt.js'></script>\n";
-  script += "<script>SaxonJS.transform({\n";
+  script += "<script>\n";
+  script += "window.onload = function() {\n";
+  script += "  SaxonJS.transform({\n";
   script += `  stylesheetLocation: '${stylebase}.sef.json'`;
 
   if (Object.entries(query).length === 0) {
@@ -95,7 +97,8 @@ function patch(request, response, data, query) {
     script += ",\n";
     script += `  stylesheetParams: ${JSON.stringify(query)}\n`;
   }
-  script += "}, 'async');</script>\n";
+  script += "}, 'async');\n";
+  script += "}\n</script>\n";
 
   return checkCompile(request, response, root + stylebase,
                       html.substring(0, pos) + script + html.substring(pos));
@@ -126,7 +129,12 @@ function compile(request, response, stylebase, html) {
 
   console.log("Compiling XSL with xslt3.js");
   const child = exec(cmd, (error, stdout) => {
-    console.log(stdout);
+    if (stdout) {
+      console.log(stdout);
+    }
+    if (error) {
+      console.log(error);
+    }
     response.status(200).send(html);
   });
 }

@@ -255,3 +255,37 @@ nav .title {
 .mediaobject {
     text-align: center;
 }
+
+.fa-solid {
+    font-size: 30pt;
+}
+
+.toc .fa-solid {
+    display: none;
+}
+
+.appendix .section .section {
+    border-top: 1px solid black;
+}
+
+h3 { font-weight: 400;
+     margin-top: 2.1rem;
+     margin-bottom: 2rem;
+     font-size: 2.2rem;
+     line-height: 1;
+   }
+
+h4 { font-weight: 400;
+     margin-top: 2.1rem;
+     margin-bottom: 2rem;
+     font-size: 2.2rem;
+     line-height: 1;
+}
+    
+.itemizedlist .title {
+    font-weight: normal;
+}
+
+#thanks h1 .number {
+    display: none;
+}

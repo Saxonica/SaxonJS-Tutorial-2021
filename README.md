@@ -1,6 +1,6 @@
-# SaxonJS-Tutorial-2021, version 0.9.9
+# SaxonJS-Tutorial-2021, version 1.0.2
 
-Last updated on 2 November, 2021.
+Last updated on 3 November, 2021.
 
 **Table of contents**
 + [Background](#Background)

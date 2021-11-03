@@ -1,0 +1,80 @@
+
+
+{
+  "*": { "tsp": { "factor": 5.9194, "units": "ml" },
+         "Tbs": { "factor": 15.0, "units": "ml" },
+         "cup": { "factor": 284.0, "units": "ml" },
+         "in": { "factor": 2.54, "units": "cm" },
+         "lb": { "factor": 0.4536, "units": "kg" },
+         "oz": { "factor": 28.35, "units": "g" },
+         "qt": { "factor": 1.137, "units": "ℓ" },
+         "pinch": { "factor": 1, "units": "pinch" }
+       },
+  "butter": {
+    "Tbs": {
+      "factor": 14.1748,
+      "units": "g"
+    },
+    "cup": {
+      "factor": 226.796,
+      "units": "g"
+    },
+    "oz": {
+      "factor": 28.346,
+      "units": "g"
+    }
+  },
+  "flour": {
+    "Tbs": {
+      "factor": 7.81,
+      "units": "g"
+    },
+    "cup": {
+      "factor": 125,
+      "units": "g"
+    }
+  },
+  "pasta": {
+    "cup": {
+      "factor": 100,
+      "units": "g"
+    },
+    "lb": { "factor": 0.4536, "units": "kg" }
+  },
+  "frozen peas": {
+    "cup": {
+      "factor": 134,
+      "units": "g"
+    }
+  },
+  "rice": {
+    "cup": {
+      "factor": 200,
+      "units": "g"
+    }
+  },
+  "cinnamon": {
+    "tsp": {
+      "factor": 2.6,
+      "units": "g"
+    }
+  },
+  "pepper": {
+    "tsp": {
+      "factor": 2.3,
+      "units": "g"
+    }
+  },
+  "miso paste": {
+    "tsp": {
+      "factor": 5.67,
+      "units": "g"
+    }
+  },
+  "salt": {
+    "tsp": {
+      "factor": 5.69,
+      "units": "g"
+    }
+  }
+}

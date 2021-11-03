@@ -1,0 +1,783 @@
+<part xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xml:id="refs" version="5.1">
+<title>References</title>
+
+<appendix xml:id="ref.SaxonJS">
+<title>API Quick References</title>
+
+<note>
+<title>A word about type conversion</title>
+<para>When interacting with JavaScript from XSLT, it is important to
+be aware of type conversion: XDM to JavaScript, and JavaScript to XDM.
+</para>
+<para>The SaxonJS internal conversions are designed to do "what you'd
+expect", but there are times that this might not be straightforward.
+</para>
+<para>(Type conversion is also relevant when calling the SaxonJS API
+methods, e.g. for transform options.)</para>
+<para>We’re not going to try to explain all the conversions here,
+but <link xlink:href="https://www.saxonica.com/saxon-js/documentation/index.html#!xdm/conversions">the gory details</link> are all in
+<link xlink:href="https://www.saxonica.com/saxon-js/documentation/">the documentation</link>!</para>
+</note>
+
+<section>
+<title>SaxonJS API</title>
+
+<section>
+<title>SaxonJS.atom()</title>
+
+<programlisting>SaxonJS.atom(value, type?)
+</programlisting>
+
+<para>Constructs an XDM atomic value.</para>
+
+<para><code>value</code> (Boolean, Number or String) JavaScript value
+to be converted.</para>
+
+<para><code>type</code> (String) Local name of a built-in atomic type
+in the “xs” namespace: e.g. “integer”, “decimal”, “dateTime”.</para>
+</section>
+
+<section>
+<title>SaxonJS.getProcessorInfo()</title>
+
+<programlisting>SaxonJS.getProcessorInfo()
+</programlisting>
+
+<para>Returns an object containing standard information about the processor.
+The properties of the returned object include:
+<code>version</code>,
+<code>vendor</code>,
+<code>vendorURL</code>,
+<code>productName</code>,
+<code>productVersion</code>,
+<code>isSchemaAware</code>,
+<code>supportsSerialization</code>,
+<code>supportsBackwardsCompatibility</code>,
+<code>supportsNamespaceAxis</code>,
+<code>supportsStreaming</code>,
+<code>supportsDynamicEvaluation</code>,
+<code>supportsHigherOrderFunctions</code>,
+<code>xPathVersion</code>,
+and
+<code>xsdVersion</code>.</para>
+</section>
+
+<section>
+<title>SaxonJS.getResource()</title>
+
+<programlisting>SaxonJS.getResource(options)
+</programlisting>
+
+<para>Retrieves a resource asynchronously, delivering a Promise which
+is fulfilled when the resource is available.</para>
+
+<para><code>options</code> is a JavaScript object with the following
+properties:</para>
+
+<itemizedlist>
+<listitem>
+<para><code>location</code> (String or URL)</para>
+</listitem>
+<listitem>
+<para><code>file</code> (String) </para>
+</listitem>
+<listitem>
+<para><code>text</code> (String)</para>
+</listitem>
+<listitem>
+<para><code>type</code> (String: "text", "json", or "xml")</para>
+</listitem>
+<listitem>
+<para><code>encoding</code> (String)</para>
+</listitem>
+<listitem>
+<para><code>text</code> (String)</para>
+</listitem>
+<listitem>
+<para><code>baseURI</code> (String)</para>
+</listitem>
+<listitem>
+<para><code>text</code> (String)</para>
+</listitem>
+<listitem>
+<para><code>headers</code> (Object)</para>
+</listitem>
+</itemizedlist>
+
+<para>Exactly one of <code>location</code>, <code>file</code>,
+or <code>text</code> must be supplied.</para>
+</section>
+
+<section>
+<title>SaxonJS.transform()</title>
+
+<programlisting>SaxonJS.transform(options, execution?)
+</programlisting>
+
+<para>Executes an XSLT transformation from a supplied SEF, as specified by
+the supplied options. Returns an object containing the transformation
+results (see below).</para>
+
+<variablelist>
+<varlistentry>
+<term><code>options</code> (Object)</term>
+<listitem>
+<para>An object used to supply the transform options: the stylesheet
+location, principal input document, invocation options, additional
+resources, result delivery, and transformation behavior.</para>
+
+<itemizedlist>
+<title>Stylesheet location</title>
+<listitem><para><code>stylesheetLocation</code> (String) </para></listitem>
+<listitem><para><code>stylesheetFileName</code> (String)</para></listitem>
+<listitem><para><code>stylesheetText</code> (String)</para></listitem>
+<listitem><para><code>stylesheetInternal</code> (Object)</para></listitem>
+<listitem><para><code>stylesheetBaseURI</code> (String)</para></listitem>
+</itemizedlist>
+
+<itemizedlist>
+<title>Principal result document</title>
+<listitem><para><code>sourceType</code> (String: "xml" (default) or "json")</para></listitem>
+<listitem><para><code>sourceLocation</code> (String)</para></listitem>
+<listitem><para><code>sourceFileName</code> (String)</para></listitem>
+<listitem><para><code>sourceNode</code> (DOM Node)</para></listitem>
+<listitem><para><code>sourceText</code> (String)</para></listitem>
+<listitem><para><code>sourceBaseURI</code> (String)</para></listitem>
+</itemizedlist>
+
+<itemizedlist>
+<title>Invocation options</title>
+<listitem><para><code>stylesheetParams</code> (ParameterMap)</para></listitem>
+<listitem><para><code>initialTemplate</code> (String)</para></listitem>
+<listitem><para><code>templateParams</code> (ParameterMap)</para></listitem>
+<listitem><para><code>tunnelParams</code> (ParameterMap)</para></listitem>
+<listitem><para><code>initialFunction</code> (String)</para></listitem>
+<listitem><para><code>functionParams</code> (Array)</para></listitem>
+<listitem><para><code>initialMode</code> (String)</para></listitem>
+<listitem><para><code>initialSelection</code> (XDM value)</para></listitem>
+</itemizedlist>
+
+<itemizedlist>
+<title>Additional preloaded resources</title>
+<listitem><para><code>documentPool</code> (Object)</para></listitem>
+<listitem><para><code>textResourcePool</code> (Object)</para></listitem>
+</itemizedlist>
+
+<itemizedlist>
+<title>Result delivery</title>
+<listitem><para><code>destination</code> (String: "replaceBody", "appendToBody", "prependToBody", "raw", "document", "application", "file", "stdout" or "serialized")</para></listitem>
+<listitem><para><code>resultForm</code> (String: "default", "array", "iterator", or "xdm")</para></listitem>
+<listitem><para><code>deliverMessage</code> (Function)</para></listitem>
+<listitem><para><code>deliverResultDocument</code> (Function)</para></listitem>
+<listitem><para><code>masterDocument</code> (DOM Node)</para></listitem>
+<listitem><para><code>baseOutputURI</code> (String)</para></listitem>
+</itemizedlist>
+
+<itemizedlist>
+<title>Transformation behavior</title>
+<listitem><para><code>collations</code> (Object)</para></listitem>
+<listitem><para><code>collectionFinder</code> (Function)</para></listitem>
+<listitem><para><code>logLevel</code> (Number)</para></listitem>
+<listitem><para><code>nonInteractive</code> (Boolean)</para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><code>execution</code> (String: "sync" or "async")</term>
+<listitem>
+<para>Specifies whether the
+execution of the transform is synchronous or asynchonous.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>The transformation results object also has properties:</para>
+
+<itemizedlist>
+<listitem><para><code>principalResult</code> (Object)</para></listitem>
+<listitem><para><code>resultDocuments</code> (Object)</para></listitem>
+<listitem><para><code>stylesheetInternal</code> (Object)</para></listitem>
+<listitem><para><code>masterDocument</code> (DOM Node)</para></listitem>
+</itemizedlist>
+</section>
+
+<section>
+<title>SaxonJS.serialize()</title>
+
+<programlisting>SaxonJS.serialize(value, options?)
+</programlisting>
+
+<para>Produces a serialization of the supplied JavaScript value. The
+value is first converted to an XDM value (using the "weak" conversion
+rules defined in the documentation), and then serialized according to
+the rules of the W3C XDM Serialization Recommendation version 3.1.</para>
+
+<para><code>value</code> (Object) </para>
+
+<para><code>options</code> (Object) Serialization parameters e.g. <code>{method:"xml",
+indent:true}</code>
+</para>
+</section>
+
+<section>
+<title>SaxonJS.setLogLevel()</title>
+
+<programlisting>SaxonJS.setLogLevel(level)
+</programlisting>
+
+<para>Used to set the logging level for warnings, processing messages,
+or full tracing.</para>
+
+<para><code>level</code> (Number) 0 switches off warnings; 1 is the default; 2 or
+higher adds some processing messages; and 10 provides full tracing.</para>
+</section>
+
+<section>
+<title>SaxonJS.XPath.evaluate()</title>
+
+<programlisting>SaxonJS.XPath.evaluate(xpath, contextItem?, options?)
+</programlisting>
+
+<para>Evaluates an XPath 3.1 expression with JavaScript arguments and
+results. No compiled XSLT stylesheet (SEF) is required.</para>
+
+<variablelist>
+<varlistentry>
+<term><code>xpath</code> (String)</term>
+<listitem>
+<para>XPath expression to be evaluated.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><code>contextItem</code> (Object)</term>
+<listitem>
+<para>Used to supply a context item for the
+expression. The supplied JavaScript object is converted to an XDM
+value according to the "strong" conversion rules (as defined in the
+documentation). </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><code>options</code> (Object)</term>
+<listitem>
+<para>Used to supply values for the static and dynamic evaluation of
+the expression, and to indicate how the result should be delivered. In
+the absence of this argument default option values are used. The
+options available are:</para>
+
+<itemizedlist>
+<listitem><para><code>params</code> (Object)</para></listitem>
+<listitem><para><code>staticBaseURI</code> (String)</para></listitem>
+<listitem><para><code>namespaceContext</code> (Object)</para></listitem>
+<listitem><para><code>xpathDefaultNamespace</code> (String)</para></listitem>
+<listitem><para><code>defaultDecimalFormat</code> (Object)</para></listitem>
+<listitem><para><code>namedDecimalFormats</code> (Object)</para></listitem>
+<listitem><para><code>resultForm</code> (String: "default", "array", "iterator", or "xdm")</para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+</variablelist>
+</section>
+
+<section>
+<title>XError</title>
+
+<para>Describes errors that occur.</para>
+</section>
+</section>
+<section>
+<title>ixsl: Quick Reference</title>
+
+<para>In this section, we'll focus on SaxonJS in the browser, e.g.
+talking about the HTML page. When using SaxonJS on Node.js, there is
+no HTML page, but instead you can supply a “master document” when
+invoking the transformation, which acts in a similar way.</para>
+
+<para>Examples of JavaScript objects that you may want to work with:</para>
+
+<itemizedlist>
+<listitem>
+<para>the window object
+</para>
+</listitem>
+<listitem>
+<para>event objects
+</para>
+</listitem>
+<listitem>
+<para>nodes in the HTML DOM
+</para>
+</listitem>
+<listitem>
+<para>objects returned by extension functions
+</para>
+</listitem>
+</itemizedlist>
+
+<para>Note that nodes in the HTML DOM can be treated as both XDM
+nodes, and as JavaScript objects.</para>
+
+<section>
+<title>Extension functions</title>
+
+<itemizedlist>
+<listitem>
+<para>Accessing important objects:
+ixsl:event(), ixsl:page(), ixsl:source(), ixsl:window()
+</para>
+</listitem>
+<listitem>
+<para>Accessing other information:
+ixsl:location(), ixsl:query-params(), ixsl:style()
+</para>
+</listitem>
+<listitem>
+<para>Accessing properties of JavaScript objects:
+ixsl:contains(), ixsl:get()
+</para>
+</listitem>
+<listitem>
+<para>Calling JavaScript code:
+ixsl:apply(), ixsl:call(), ixsl:eval()
+and "js" namespace shorthand for global JS functions
+</para>
+</listitem>
+</itemizedlist>
+
+<section>
+<title>ixsl:apply</title>
+
+<programlisting>ixsl:apply($function as item(),
+           $arguments as array(*)) as item()*
+</programlisting>
+
+<para>Applies a JavaScript function.</para>
+
+<para><code>$function</code> JavaScript function object</para>
+
+<para><code>$arguments</code> Arguments to the function, supplied as an array</para>
+</section>
+
+<section>
+<title>ixsl:call</title>
+
+<programlisting>ixsl:call($object as item(),
+          $method as xs:string,
+          $arguments as array(*)) as item()*
+</programlisting>
+
+<para>Calls a JavaScript function from a specified object.</para>
+
+<para><code>$object</code> JavaScript object on which the function is defined</para>
+
+<para><code>$method</code> Either a function name or a dot (character '.') separated
+list of names</para>
+
+<para><code>$arguments</code> Arguments to the function, supplied as an array</para>
+</section>
+
+<section>
+<title>ixsl:contains</title>
+
+<programlisting>ixsl:contains($object as item(),
+              $property as xs:string) as xs:boolean
+</programlisting>
+
+<para>Test if a property is present on a JavaScript object.</para>
+
+<para><code>$object</code> JavaScript object</para>
+
+<para><code>$property</code> Either a property name or a dot
+(character '.') separated list of names</para>
+</section>
+
+<section>
+<title>ixsl:eval</title>
+
+<programlisting>ixsl:eval($script as xs:string) as item()*
+</programlisting>
+
+<para>Executes JavaScript code, supplied as a string.</para>
+    
+<para><code>$script</code> JavaScript code</para>
+</section>
+
+<section>
+<title>ixsl:event</title>
+
+<programlisting>ixsl:event() as item()?
+</programlisting>
+
+<para>Returns the current Event object while processing a user input event
+(or the empty sequenceotherwise).</para>
+</section>
+
+<section>
+<title>ixsl:get</title>
+
+<programlisting>ixsl:get($object as item(),
+         $property as xs:string) as item()*
+</programlisting>
+
+<para>Gets a property of a JavaScript object.</para>
+    
+<para><code>$object</code> JavaScript object</para>
+
+<para><code>$property</code> Property name, or dot (character '.')
+separated list of names</para>
+</section>
+
+<section>
+<title>ixsl:location</title>
+
+<programlisting>ixsl:location() as xs:string
+</programlisting>
+
+<para>Returns the value of the href property of the Window.location
+object. Used to get the current location URL as a string.</para>
+</section>
+
+<section>
+<title>ixsl:page</title>
+
+<programlisting>ixsl:page() as node()
+</programlisting>
+
+<para>Returns the document node of the HTML DOM document (or on Node.js, the
+document node supplied as the master document, if any).</para>
+</section>
+
+<section>
+<title>ixsl:query-params</title>
+
+<programlisting>ixsl:query-params() as map(*)
+</programlisting>
+
+<para>Parses the query parameters of the HTML page URI, returning the values
+as an XPath map.</para>
+</section>
+
+<section>
+<title>ixsl:source</title>
+
+<programlisting>ixsl:source() as node()?
+</programlisting>
+
+<para>Returns the global context item - the document node supplied as input
+to the transformation using a parameter such as sourceNode,
+sourceLocation, or sourceText, if such a source document was supplied,
+or the empty sequence otherwise.</para>
+</section>
+
+<section>
+<title>ixsl:style</title>
+
+<programlisting>ixsl:style($node as item()?) as map(*)
+</programlisting>
+
+<para>Returns an XPath map containing the style properties of an HTML
+element node.</para>
+    
+<para><code>$node</code> HTML element node</para>
+</section>
+
+<section>
+<title>ixsl:window</title>
+
+<programlisting>ixsl:window() as item()
+</programlisting>
+
+<para>Returns the Window object.</para>
+</section>
+</section>
+
+<section>
+<title>ixsl: extension instructions</title>
+
+<note>
+<title>Conventions</title>
+<para>“(AVT)” means the attribute is interpreted as an attribute value
+template, so it may contain string expressions within curly braces.</para>
+<para><code>object?</code> means the attribute is optional.
+</para>
+</note>
+
+<itemizedlist>
+<listitem>
+<para>Setting and removing attributes on elements in the HTML page (or
+master document):
+ixsl:set-attribute, ixsl:remove-attribute
+</para>
+</listitem>
+<listitem>
+<para>Setting and removing properties of JavaScript objects:
+ixsl:set-property, ixsl:remove-property, ixsl:set-style
+</para>
+</listitem>
+<listitem>
+<para>Asynchronous processing (time delays, document fetching, HTTP
+client):
+ixsl:schedule-action
+</para>
+</listitem>
+</itemizedlist>
+
+<section>
+<title>ixsl:remove-attribute</title>
+
+<programlisting>&lt;ixsl:remove-attribute name="{eqname}" object?="expr"/>
+</programlisting>
+
+<para>Removes the attribute with a given name from the current element node,
+or other specified element node, in the HTML page. A typical use for
+this is to enable a disabled HTML element by removing the disabled
+attribute (setting the value has no effect).</para>
+
+<para><code>@name</code> The name of the attribute to be removed. (AVT)</para>
+
+<para><code>@object?</code> The element the attribute belongs to - when no object
+attribute is present, the current node is used.</para>
+</section>
+
+<section>
+<title>ixsl:remove-property</title>
+
+<programlisting>&lt;ixsl:remove-property name="{token}" object?="expr"/>
+</programlisting>
+
+<para>Removes a property from a JavaScript object (including DOM nodes).</para>
+
+<para><code>@name</code> Property name, or dot (character '.')
+separated list of names. (AVT)</para>
+
+<para><code>@object?</code> The object the property belongs to - when
+no object attribute is present, the Window object is used.</para>
+</section>
+
+<section>
+<title>ixsl:schedule-action</title>
+
+<programlisting>&lt;ixsl:schedule-action wait?="expr" document?="{uris}"
+                      http-request?="expr">
+   &lt;ixsl:call-template />
+&lt;/ixsl:schedule-action>
+</programlisting>
+
+<para>Makes an asynchronous call to the template named in an
+<code>xsl:call-template</code> instruction that is the only permitted body
+content of <code>ixsl:schedule-action</code>, either after waiting a specified
+time, or after fetching specified documents, or after getting a
+response from a specified HTTP request. The instruction returns an
+item containing any associated JavaScript XMLHttpRequest objects, or
+an empty sequence otherwise.</para>
+
+<para><code>@wait?</code> Used to specify the delay in milliseconds
+before the call is invoked; or when used with attributes
+<code>document</code> or <code>http-request</code>, specifies a
+timeout in milliseconds for the associated HTTP requests.</para>
+
+<para><code>@document?</code> Used to specify documents to be fetched
+before the call is invoked. A space-separated list of document URIs
+can be used to specify multiple files (text, JSON, and XML).</para>
+
+<para><code>@http-request?</code> Used to specify an HTTP request to
+be made before the call is invoked (with the HTTP response as the
+context).</para>
+</section>
+
+<section>
+<title>ixsl:set-attribute</title>
+
+<programlisting>&lt;ixsl:remove-attribute name="{eqname}"
+                       select="expr"
+                       object?="expr"/>
+</programlisting>
+
+<para>Sets an attribute with a given name and value on the current
+element node, or other specified element node, in the HTML page.</para>
+
+<para><code>@name</code> The name of the attribute to be added. (AVT)</para>
+
+<para><code>@select</code> The attribute value.</para>
+
+<para><code>@object?</code> The element the attribute should be added
+to - when no object attribute is present, the current node is
+used.</para>
+</section>
+
+<section>
+<title>ixsl:set-property</title>
+
+<programlisting>&lt;ixsl:set-property name="{token}"
+                   select="expr"
+                   object?="expr"/>
+</programlisting>
+
+<para>Sets the value of a property for a JavaScript object (including DOM
+nodes). A nested property can be set using a dot-separated name.</para>
+
+<para><code>@name</code> Property name, or dot (character '.')
+separated list of names. (AVT)</para>
+
+<para><code>@select</code> Provides the new property value.</para>
+
+<para><code>@object?</code> The object the property belongs to - when
+no object attribute is present, the Window object is used.</para>
+</section>
+
+<section>
+<title>ixsl:set-style</title>
+
+<programlisting>&lt;ixsl:set-style name="{token}"
+                select="expr"
+                object?="expr"/>
+</programlisting>
+
+<para>Sets a style property of an HTML element.</para>
+
+<para><code>@name</code> Style property name in camel-case. (AVT)</para>
+
+<para><code>@select</code> Provides the new style property value.</para>
+
+<para><code>@object?</code> The HTML element the style property
+belongs to - when no object attribute is present, the current node is
+used.</para>
+</section>
+</section>
+</section>
+</appendix>
+
+<appendix xml:id="ref.events">
+<title>Browser events</title>
+
+<para>A non-exhaustive list of “bubbling” browser events:
+<code>animationend</code>,
+<code>animationiteration</code>,
+<code>animationstart</code>,
+<code>click.button</code>,
+<code>click.mouse</code>,
+<code>contextmenu</code>,
+<code>copy</code>,
+<code>cut</code>,
+<code>drag</code>,
+<code>dragend</code>,
+<code>dragenter</code>,
+<code>dragleave</code>,
+<code>dragover</code>,
+<code>dragstart</code>,
+<code>drop</code>,
+<code>focus</code>,
+<code>focusin</code>,
+<code>focusout</code>,
+<code>keydown</code>,
+<code>keypress</code>,
+<code>keyup</code>,
+<code>mousedown</code>,
+<code>mousemove</code>,
+<code>mouseout</code>,
+<code>mouseover</code>,
+<code>mouseup</code>,
+<code>offline</code>,
+<code>online</code>,
+<code>paste</code>,
+<code>reset</code>,
+<code>resize</code>,
+<code>scroll</code>,
+<code>select</code>,
+<code>submit</code>,
+<code>transitionend</code>,
+<code>transitionrun</code>,
+<code>transitionstart</code>,
+and <code>wheel</code></para>
+
+<sidebar>
+<itemizedlist>
+<listitem>
+<para>Most events “bubble” up, but there are some that do not.
+Mozilla publishes one
+<link xlink:href="https://developer.mozilla.org/en-US/docs/Web/Events">useful
+reference</link> of browser events.
+</para>
+</listitem>
+<listitem><para>SaxonJS uses JavaScript to mediate between the events that occur
+and your stylesheet.</para></listitem>
+<listitem>
+<para>SaxonJS (2.3) places its event handlers on the <code>document</code>
+object that is the ultimate ancestor for bubbling events.</para>
+</listitem>
+<listitem>
+<para>Consequently, SaxonJS can only respond to bubbling events.</para>
+</listitem>
+</itemizedlist>
+
+<para>If you need to respond to a non-bubbling event, you can use a JavaScript
+handler in the same application that uses SaxonJS.</para>
+</sidebar>
+</appendix>
+
+<appendix xml:id="ref.tasks">
+<title>Gradle tasks</title>
+<para>The build script for this project includes the following tasks:</para>
+
+<variablelist>
+<varlistentry>
+<term><buildtarget>checkConfig</buildtarget></term>
+<listitem>
+<para>Summarizes your configuration.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><buildtarget>pythonServerStart</buildtarget></term>
+<term><buildtarget>pythonServerStop</buildtarget></term>
+<listitem>
+<para>Start and stop the Python web server.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><buildtarget>nodeServerStart</buildtarget></term>
+<term><buildtarget>nodeServerStop</buildtarget></term>
+<listitem>
+<para>Start and stop the Node.js web server.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><buildtarget>dockerServerStart</buildtarget></term>
+<term><buildtarget>dockerServerStop</buildtarget></term>
+<listitem>
+<para>Start and stop the Docker container version of the Node.js web server.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><buildtarget>node_xslt3</buildtarget></term>
+<term><buildtarget>docker_xslt3</buildtarget></term>
+<listitem>
+<para>Run the Node.js version of the command line Saxon processor to
+compile a stylesheet. The <buildtarget>node_xslt3</buildtarget> task uses Node.js
+directly, <buildtarget>docker_xslt3</buildtarget> uses the Docker container.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><buildtarget>eej</buildtarget></term>
+<listitem>
+<para>Run the Java version of the command line Saxon processor to compile
+a stylesheet.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>There are a few other tasks, but they’re mostly support tasks
+for these “public” entry points.</para>
+
+</appendix>
+
+</part>

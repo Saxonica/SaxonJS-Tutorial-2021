@@ -1,0 +1,1446 @@
+<part xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xml:id="browser" version="5.1">
+<title>SaxonJS in the browser</title>
+
+<chapter>
+<title>Using SaxonJS in the browser</title>
+
+<para>SaxonJS works in all the modern browsers, even mobile ones, provided that
+JavaScript is enabled. It consists of four parts:</para>
+
+<orderedlist>
+<listitem>
+<para>At least one HTML web page, because that’s where the browser starts.</para>
+</listitem>
+<listitem>
+<para>The <code>SaxonJS2.rt.js</code> library. This is the “runtime” for SaxonJS. It’s
+a pure JavaScript implementation of the XSLT 3.0 processor.
+</para> 
+</listitem>
+<listitem>
+<para>Your stylesheet, in a compiled form. (We’ll come back to that later.)</para>
+</listitem>
+<listitem>
+<para>A single line of JavaScript “glue” to get the browser going.</para>
+</listitem>
+</orderedlist>
+</chapter>
+
+<chapter>
+<title>Anatomy of “Hello, World”</title>
+
+<orderedlist>
+<listitem>
+<para><filename>/hello/index.html</filename>, the HTML page.
+</para> 
+</listitem>
+<listitem>
+<para><filename>/hello/js/SaxonJS2.rt.js</filename>, the library.
+</para> 
+</listitem>
+<listitem>
+<para><filename>/hello/xslt/stylesheet.sef.json</filename>, the compiled stylesheet.
+The “source” stylesheet is 
+<filename>/hello/xslt/stylesheet.xsl</filename>, but that’s not used at runtime
+and doesn’t have to be present.</para>
+</listitem>
+<listitem>
+<para><filename>/hello/js/start.js</filename>, and the <tag>script</tag> elements
+in the HTML page, are the glue.
+</para> 
+</listitem>
+</orderedlist>
+<para>There’s a little bit of CSS in there too, because style.</para>
+</chapter>
+
+<chapter>
+<title>The SaxonJS Object</title>
+
+<para>The interface between the browser (JavaScript) and the
+stylesheet (compiled XSLT), is the <code>SaxonJS</code> object. 
+</para>
+
+<para>(I promise you don’t need to know JavaScript to understand this.)</para>
+
+<itemizedlist>
+<listitem>
+<para>You can get information out of the <code>SaxonJS</code> object, or make it
+do things on your behalf, by calling “methods” on it. (That’s a technical way of
+saying you write <code>SaxonJS.<replaceable>something()</replaceable></code> in
+a <tag>script</tag> element.)</para>
+</listitem>
+<listitem>
+<para><code>SaxonJS.getProcessorInfo()</code> returns information about the SaxonJS
+processor.</para>
+</listitem>
+<listitem>
+<para><code>SaxonJS.transform()</code> runs a transformation. (We’re going to use this one a lot.)
+</para>
+</listitem>
+<listitem>
+<para>There are others; all the gory details are in <xref linkend="ref.SaxonJS"/>.</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>Introduction to the exercises</title>
+
+<itemizedlist>
+<listitem>
+  <para>All of the exercises are under the <filename>/exercises</filename> directory:
+  <link xlink:href="http://localhost:9000/exercises/"/>.
+You can load them in the browser like this:
+<code>http://localhost:9000/exercises/<replaceable>name</replaceable></code>,
+for example <link xlink:href="http://localhost:9000/exercises/ex01/"/>
+</para>
+</listitem>
+<listitem>
+<para>You can write your answers in that directory. We’ve tried to make the exercises
+build on each other, so you get a sense of progressive enhancement.</para>
+</listitem>
+<listitem>
+<para>If you ever fall behind, or decide you don’t like your solution, you can
+“cheat” and look at ours under the <filename>/answers</filename> directory.
+</para>
+<para>(There are almost always multiple ways to solve a problem; ours is 
+not “the right” way, it’s just the way that we thought was easiest/best/simplest.)</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>Exercise 1 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex1"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>This exercise is just to get you familiar with the “furniture”
+necessary to load SaxonJS into the browser.</para>
+
+<orderedlist>
+<listitem>
+<para>Open <filename>index.html</filename> in the
+<filename>exercises/ex1</filename> directory in your favorite editor.
+</para>
+</listitem>
+<listitem>
+<para>Add a <tag>script</tag> link to SaxonJS in the <tag>head</tag>
+of the document:
+</para>
+<programlisting language="xml"><![CDATA[<script type="text/javascript" src="/js/SaxonJS2.rt.js"></script>]]></programlisting>
+</listitem>
+<listitem>
+<para>Add another <tag>script</tag> just below the first to call the
+<code>getProcessorInfo()</code> API. The SaxonJS API includes several
+methods, including this one which returns information about the processor.</para>
+<programlisting language="xml"><![CDATA[<script>console.log(SaxonJS.getProcessorInfo())</script>]]></programlisting>
+</listitem>
+<listitem>
+<para>Open your browser’s console window to view the processor info.
+</para>
+</listitem>
+</orderedlist>
+
+<para>Does SaxonJS support higher order functions? (This is not a
+trick question, the answer is in the processor info!)
+</para>
+</chapter>
+
+<chapter>
+<title>SEF files</title>
+
+<itemizedlist>
+<listitem>
+<para>Processing XML in the browser with only JavaScript is not easy or
+efficient. That’s one of the reasons for SaxonJS!</para>
+</listitem>
+<listitem>
+<para>This is a chicken-and-egg problem because XSLT stylesheets are XML.</para>
+</listitem>
+<listitem>
+<para>SaxonJS resolves this problem by operating on a compiled version of the
+XSLT stylesheet: an SEF (Stylesheet Export File).</para>
+</listitem>
+<listitem>
+<para>The XSLT-to-SEF compiler resolves the stylesheet down into something that
+can be processed efficiently in the browser.</para>
+</listitem>
+</itemizedlist>
+
+</chapter>
+
+<chapter>
+<title>For your amusement…</title>
+
+<para>This simple XSLT stylesheet:</para>
+
+<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="3.0">
+
+<xsl:template match="/">
+  <doc>Hello, world.</doc>
+</xsl:template>
+
+</xsl:stylesheet>]]></programlisting>
+
+<para>compiles to this SEF file:</para>
+
+<programlisting language="json">
+{"N":"package","when":"2021-10-21T10:08:22.824+01:00",
+"expiry":"2021-11-15","id":"0","version":"30","packageVersion":"1",
+"saxonProduct":"SAXON-EE","saxonVersion":"10.6",
+"buildDateTime":"2021-10-21T10:08:22.825+01:00",
+"target":"JS","targetVersion":"2","relocatable":"true",
+"implicit":"true","C":[{"N":"co","id":"0","binds":"","C":[{"N":"mode",
+"onNo":"TC","flags":"dW","patternSlots":"0","C":[{"N":"templateRule",
+"prec":"0","prio":"-0.5","seq":"0","rank":"0","minImp":"0",
+"slots":"0","matches":"ND","flags":"s","line":"5","module":"out.xsl",
+"C":[{"N":"p.nodeTest","role":"match","test":"ND"},{"N":"elem",
+"role":"action","defaultElementNS":"http:\/\/www.w3.org\/1999\/xhtml",
+"ns":"xsl=~ xml=~","line":"6","name":"doc","nsuri":"",
+"C":[{"N":"valueOf","flags":"l","C":[{"N":"str",
+"val":"Hello, world."}]}]}]}]}]},{"N":"overridden"},{"N":"output",
+"C":[{"N":"property",
+"name":"Q{http:\/\/saxon.sf.net\/}stylesheet-version","value":"30"}]},
+{"N":"decimalFormat"}],"Σ":"cd7c765a"}</programlisting>
+
+<para>Which you are not expected to be able to read. Pretty printing
+doesn’t help much.</para>
+
+<programlisting language='json'>{
+  "N": "package",
+  "when": "2021-10-21T10:08:22.824+01:00",
+  "expiry": "2021-11-15",
+  "id": "0",
+  "version": "30",
+  "packageVersion": "1",
+  "saxonProduct": "SAXON-EE",
+  "saxonVersion": "10.6",
+  "buildDateTime": "2021-10-21T10:08:22.825+01:00",
+  "target": "JS",
+  "targetVersion": "2",
+  "relocatable": "true",
+  "implicit": "true",
+  "C": [
+    {
+      "N": "co",
+      "id": "0",
+      "binds": "",
+      "C": [
+        {
+          "N": "mode",
+          "onNo": "TC",
+          "flags": "dW",
+          "patternSlots": "0",
+          "C": [
+            {
+              "N": "templateRule",
+              "prec": "0",
+              "prio": "-0.5",
+              "seq": "0",
+              "rank": "0",
+              "minImp": "0",
+              "slots": "0",
+              "matches": "ND",
+              "flags": "s",
+              "line": "5",
+              "module": "out.xsl",
+              "C": [
+                {
+                  "N": "p.nodeTest",
+                  "role": "match",
+                  "test": "ND"
+                },
+                {
+                  "N": "elem",
+                  "role": "action",
+                  "defaultElementNS": "http://www.w3.org/1999/xhtml",
+                  "ns": "xsl=~ xml=~",
+                  "line": "6",
+                  "name": "doc",
+                  "nsuri": "",
+                  "C": [
+                    {
+                      "N": "valueOf",
+                      "flags": "l",
+                      "C": [
+                        {
+                          "N": "str",
+                          "val": "Hello, world."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "N": "overridden"
+    },
+    {
+      "N": "output",
+      "C": [
+        {
+          "N": "property",
+          "name": "Q{http://saxon.sf.net/}stylesheet-version",
+          "value": "30"
+        }
+      ]
+    },
+    {
+      "N": "decimalFormat"
+    }
+  ],
+  "Σ": "cd7c765a"
+}</programlisting>
+
+<para>You should never have to read an SEF file. If only we were so lucky!</para>
+</chapter>
+
+<chapter xml:id="onload">
+<title>Waiting for the browser</title>
+<para>In exercise 1, we were a little sloppy for the sake of simplicity.</para>
+<para>Generally speaking, you don’t want the browser to start
+running your stylesheet before the page is ready. One way to
+make sure that doesn’t happen is with this incantation:</para>
+
+<programlisting language="xml"><![CDATA[<script>
+  window.onload = function() {
+    SaxonJS.transform({ stylesheetLocation: "ex02.sef.json" },
+                      "async");
+  }
+</script>]]></programlisting>
+
+<para>(There are other options, including putting the script elements
+at the end of the <tag>body</tag> element or using an explicit
+event listener. This is a relatively simple alternative.)</para>
+</chapter>
+
+<chapter xml:id="ex02">
+<title>Exercise 2 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex02"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>In this exercise, you’ll run your first XSLT 3.0 transformation
+in the browser with SaxonJS! We’ll cover how you compile an XSLT
+stylesheet into a “SEF” file in the next exercise.</para>
+
+<orderedlist>
+<listitem>
+<para>Open <filename>index.html</filename> in your favorite editor.
+</para>
+</listitem>
+<listitem>
+<para>Add a script link to SaxonJS in the <tag>head</tag> of the document:
+</para>
+<programlisting language="xml"><![CDATA[<script type="text/javascript" src="/js/SaxonJS2.rt.js"></script>]]></programlisting>
+</listitem>
+<listitem>
+<para>Add a script to run the <filename>ex02.xsl</filename>
+stylesheet in its compiled form: <filename>ex02.sef.json</filename>:
+</para>
+<programlisting language="xml"><![CDATA[<script>SaxonJS.transform(
+  { stylesheetLocation: "ex02.sef.json" },
+  "async");</script>]]></programlisting>
+</listitem>
+<listitem>
+<para>Load the answer into your browser
+<link xlink:href="http://localhost:9000/exercises/ex02"/>
+</para>
+</listitem>
+</orderedlist>
+<para>Did it work?</para>
+</chapter>
+
+<chapter>
+<title>But why?</title>
+<para>Why did that example run a stylesheet?</para>
+<para>The secret sauce is another method on the <code>SaxonJS</code> object,
+<code>transform()</code>.</para>
+<para>The script element that you added:</para>
+<programlisting language="xml"><![CDATA[
+<script>SaxonJS.transform(
+   { stylesheetLocation: "ex02.sef.json" },
+   "async");</script>]]></programlisting>
+<para>is evaluated by the JavaScript engine in the browser. That runs the
+“transform” function, which runs the stylesheet.</para>
+</chapter>
+
+<chapter>
+<title>But how?</title>
+<para>How did that script run a stylesheet?</para>
+
+<para>By default, stylesheet execution is done by calling the
+template named <code>xsl:initial-template</code>.</para>
+
+<para>(You are probably used to starting transformations by running matching templates
+over a source tree. For reasons that we’ll come back to, that’s more complicated
+in the browser.)</para>
+
+<para>There are other ways to start a transformation, but we’ll leave those in the
+references for you.</para>
+
+<para>For simplicity, in all of our exercises, processing begins with the named
+template.</para>
+</chapter>
+
+<chapter xml:id="compiling">
+<title>Compiling XSL to SEF (1/3)</title>
+
+<para>There are two ways to generate SEF files:</para>
+
+<orderedlist>
+<listitem>
+<para>Use the Java Saxon-EE product:</para>
+<programlisting>java com.saxonica.Transform -xsl:<replaceable>style.xsl</replaceable> \
+     -export:<replaceable>output.sef.json</replaceable> \
+     -target:JS -nogo -relocate:on -ns:##html5</programlisting>
+<para>For the purpose of this tutorial, there is a Saxon-EE license in the
+<filename>lib/</filename> directory. It’ll expire in a few days.</para>
+</listitem>
+<listitem>
+<para>Use <filename>xslt3.js</filename> on Node.js:</para>
+<programlisting>node node_modules/xslt3/xslt3.js -xsl:<replaceable>style.xsl</replaceable> \
+     -export:<replaceable>output.sef.json</replaceable> \
+     -nogo -ns:##html5</programlisting>
+<para>Using the Node.js version of SaxonJS doesn’t require a license.</para>
+</listitem>
+</orderedlist>
+
+</chapter>
+
+<chapter>
+<title>Compiling XSL to SEF (2/3)</title>
+
+<para>You can find all the details in
+<link xlink:href="https://www.saxonica.com/saxon-js/documentation/index.html#!starting/export"
+>Exporting stylesheets for SaxonJS</link> on
+<link xlink:href="https://www.saxonica.com/">Saxonica.com</link>.</para>
+
+<orderedlist>
+<listitem>
+<para><code>-xsl</code> tells the compiler where to find the XSL file.</para>
+</listitem>
+<listitem>
+<para><code>-export</code> tells the compiler where to write the SEF.</para>
+<para>(You are strongly encouraged to name your SEF files with the
+extension <filename class="extension">.sef.json</filename>. If they don’t end with
+<filename class="extension">.json</filename>, you will have to make sure that your
+web server serves them with the content-type “<code>application/json</code>” or the
+browser may not load them properly.)</para>
+</listitem>
+<listitem>
+<para><code>-target:JS</code> tells the compiler you’re compiling for
+JavaScript.</para>
+</listitem>
+<listitem>
+<para><code>-nogo</code> tells the compiler not to attempt to execute the transformation
+after compiling it.</para>
+</listitem>
+<listitem>
+<para><code>-relocate:on</code> determines whether the static base URI of the stylesheet
+reflects where the original was compiled (off) or where the SEF file resides (on).</para>
+</listitem>
+<listitem>
+<para><code>-ns:##html5</code> declares that unprefixed element names
+will match in <emphasis>either</emphasis> no namespace
+<emphasis>or</emphasis> the HTML namespace. This allows SaxonJS to
+more closely emulate the special rules associated with the HTML5
+DOM.</para>
+</listitem>
+</orderedlist>
+</chapter>
+
+<chapter>
+<title>Compiling XSL to SEF (3/3)</title>
+
+<para>Whether you use Java or Node.js to compile, there’s some setup you need
+to do. For Java, you have to get the classpath and other aspects of the runtime environment
+setup. For Node.js, you have to install and configure node.</para>
+
+<para>We’ve added Gradle build targets that will take care of this setup for you.
+Pro: all the setup will be done for you. Con: using the build tasks may be different
+from how you’ll do it elsewhere.</para>
+
+<para>The targets are <buildtarget>eej</buildtarget> for Saxon-EE and
+either <buildtarget>node_xslt3</buildtarget> or
+<buildtarget>docker_xslt3</buildtarget> for Node.js, depending on
+whether you’re using Node.js natively or via Docker. To compile
+“<filename>style.xsl</filename>” run:</para>
+
+<programlisting>./gradlew -Pxsl=<replaceable>style.xsl</replaceable> eej</programlisting>
+
+<para>The <code>-Pxsl=</code> passes an option to Gradle that the <buildtarget>eej</buildtarget>
+step uses. The default export file has the same name as your stylesheet, but with the
+extension <code>.sef.json</code>. You can override that with <code>-Pexport=</code>,
+if you wish.</para>
+
+<para>The Node.js version works the same way, just use <buildtarget>node_xslt3</buildtarget>
+or <buildtarget>docker_xslt3</buildtarget>
+instead of <buildtarget>eej</buildtarget>.</para>
+
+</chapter>
+
+<chapter>
+<title>Exercise 3 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex03"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>In this exercise, you’ll compile an XSLT stylesheet into a SEF file.</para>
+
+<para>Start in the “root” directory where you checked out the
+repository. (Up two levels from the exercise files.)</para>
+
+<para>If you’re using Java, you can compile the stylesheet by running:</para>
+
+<screen>./gradlew -Pxsl=exercises/ex03/ex03.xsl eej
+</screen>
+
+<para>That’s the equivalent of running</para>
+
+<screen>java com.saxonica.Transform -xsl:exercises/ex03/ex03.xsl \
+     -export:exercises/ex03/ex03.sef.json \
+     -target:JS -nogo -relocate:on -ns:##html5
+</screen>
+
+<para>but using Gradle saves some typing and makes sure that the classpath
+and other Java infrastructure is set up correctly.</para>
+
+<para>If you’re using Node, you can compile the stylesheet by running</para>
+
+<screen>./gradlew -Pxsl=exercises/ex03/ex03.xsl xslt3</screen>
+
+<para>That’s the equivalent of running</para>
+
+<screen>node node_modules/xslt3/xslt3.js -xsl:exercises/ex03/ex03.xsl \
+     -export:exercises/ex03/ex03.sef.json \
+     -nogo -ns:##html5
+</screen>
+
+<para>but using Gradle saves some typing and makes sure that the node
+environment is set up correctly.</para>
+
+<orderedlist>
+<listitem>
+<para>Open up <filename>ex03.xsl</filename> in your favorite editor. Find the
+<tag>xsl:result-document</tag> instruction and add
+<code>method="ixsl:replace-content"</code> to it.
+</para>
+</listitem>
+<listitem>
+<para>Recompile the stylesheet. (This step is important!)
+</para>
+</listitem>
+<listitem>
+<para>What effect do you think that will have on the result?
+</para>
+</listitem>
+<listitem>
+<para>Load the answer into your browser:
+<link xlink:href="http://localhost:9000/exercises/ex03/"/>
+</para>
+</listitem>
+<listitem>
+<para>Did you remember to add the script lines?
+</para>
+</listitem>
+<listitem>
+<para>Were you right about the effect of the
+<tag class="attribute">method</tag> attribute?
+</para>
+</listitem>
+</orderedlist>
+</chapter>
+
+<chapter>
+<title>A recipe website</title>
+
+<para>Recipes are an interesting data set. Almost everyone is familiar with them.
+On the surface, the requirements seem quite mundane. But doing it well requires
+surprisingly sophisticated markup and processing.</para>
+
+<para>Most of the remaining exercises will focus on a simple set of
+recipes. We’ll progressively enhance the features of the recipe
+rendering in each exercise.</para>
+
+<itemizedlist>
+<listitem>
+<para>The recipes are mostly in HTML because that requires the least work to display
+in the browser.</para>
+</listitem>
+<listitem>
+<para>The markup is minimal, in some respects, to simplify managing the “authoring data”.</para>
+</listitem>
+<listitem>
+<para>Extension attributes identify useful quantities.</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>Where we’re starting</title>
+<para>If you just open
+<link xlink:href="/recipes/marys-beef-stew.html">one of the recipe files</link>,
+you’ll get a plain and
+incomplete presentation:</para>
+<mediaobject>
+<imageobject>
+<imagedata fileref="../presentation/rstart.png"/>
+</imageobject>
+</mediaobject>
+<para>Several of the following exercises will work on progressive
+improvements to this display and add interactive features implemented
+entirely in XSLT.</para>
+</chapter>
+
+<chapter>
+<title>Where we’re heading</title>
+<para>If you complete all of the exercies, including the last couple
+of “take home” assignments, you’ll
+<link xlink:href="/recipes/marys-beef-stew.html?answer=ex13">get something</link>,
+much more interactive:</para>
+<mediaobject>
+<imageobject>
+<imagedata fileref="../presentation/rfinish.png"/>
+</imageobject>
+</mediaobject>
+</chapter>
+
+<chapter>
+<title>Making life easier</title>
+
+<para>Now that we’ve introduced you to the
+<buildtarget>eej</buildtarget> (and <buildtarget>node_xslt3</buildtarget>
+or <buildtarget>docker_xslt3</buildtarget>)
+shortcuts, it’s time to introduce you to a couple more.</para>
+
+<para>Irrespective of what environment you work in, there’s an inevitable “edit,
+compile, test” cycle that you’ll go through. There are many ways to automate
+this, but the precise details depend on your platform and tools.</para>
+
+<para>Both the Python and Node.js servers in the tutorial will automate a few
+things for you.</para>
+
+<para>To enable the automation, add “<code>exercise=<replaceable>name</replaceable></code>”
+or “<code>answer=<replaceable>name</replaceable></code>” to the URI. For example:</para>
+
+<programlisting>http://localhost:9000/<replaceable>path/doc</replaceable>?exercise=ex03</programlisting>
+
+<para>That will apply the “exercises/ex03/ex03.xsl” stylesheet to the “path/doc” resource.
+If you used <code>answer=ex03</code>, it would apply the 
+“answers/ex03/ex03.xsl” stylesheet.</para>
+</chapter>
+
+<chapter>
+<title>Automation details</title>
+
+<para>If you use the exercise or answer automation queries,</para>
+
+<orderedlist>
+<listitem>
+<para>The server will automatically add the <tag>script</tag> elements that load
+the runtime and the stylesheet you specify to the document before returning it
+to the browser.</para>
+</listitem>
+<listitem>
+<para>If the server detects that the XSL file has been saved more
+recently than the SEF file, it will automatically recompile the stylesheet
+for you.</para>
+<para>(When this happens, there will be a short, but noticable delay in the time
+it takes to open the file in the browser.)</para>
+</listitem>
+</orderedlist>
+
+<para>If you take advantage of the automatic compilation, make sure you have the
+server running in a shell window that you can see. <emphasis>That</emphasis> is where
+the error output will go if your stylesheet doesn’t compile!</para>
+</chapter>
+
+<chapter xml:id="ex04">
+<title>Exercise 4 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex04"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>In this exercise, we’ll try out the “let the server fix it for
+you” feature.</para>
+
+<para>Both the Python and Node (and Dockerized Node) web servers will
+automatically add the script headers to any documents they serve if
+you pass them as parameters to the script.</para>
+
+<para>Point your browser at one of the recipes, for example:
+<link xlink:href="http://localhost:9000/recipes/pizza.html"/></para>
+
+<para>You’ll see a fairly plain and in many ways incomplete recipe. We’re
+going to fix those things in future exercises.</para>
+
+<para>(If you open <link
+xlink:href="http://localhost:9000/recipes/"/>, you’ll get a list of
+the recipes, as you might have expected.)</para>
+
+<para>Make sure you have the server running in a shell window that you
+can see.</para>
+
+<para>Now add “<code>?exercise=ex04</code>” to the URI:
+<link xlink:href="http://localhost:9000/recipes/pizza.html?exercise=ex04"/>
+</para>
+
+<para>You should see the transformed output this time.</para>
+
+<para>If you’re using the Python server, you should see something like
+this in the shell window where the server is running:</para>
+
+<programlisting>127.0.0.1 - - [21/Oct/2021 15:04:30] "GET /recipes/pizza.html?exercise=ex04 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Oct/2021 15:04:30] "GET /js/SaxonJS2.rt.js HTTP/1.1" 200 -
+> Task :pythonServerStart
+> Configure project :
+Building with Java version 1.8.0_231
+> Task :parseCompilerOptions
+> Task :eej
+BUILD SUCCESSFUL in 8s
+2 actionable tasks: 2 executed
+127.0.0.1 - - [21/Oct/2021 15:04:39] "GET /exercises/ex04/ex04.sef.json HTTP/1.1" 200 -
+</programlisting>
+
+<para>If you’re using node, you’ll get the slightly less chatty output:</para>
+
+<programlisting>GET /recipes/beef-stroganof.html?exercise=ex04
+Compiling XSL with xslt3.js
+GET /js/SaxonJS2.rt.js
+GET /exercises/ex04/ex04.sef.json</programlisting>
+
+<para>There’s one more trick to show you in this exercise. Edit the
+stylesheet <filename>ex04.xsl</filename> so that the “it worked”
+message is different and save the XSL file.</para>
+
+<para><emphasis role="bold">Before</emphasis> you recompile the SEF
+file, hit reload in the browser.</para>
+
+<para>Magic!</para>
+
+<para>The browser will also automatically recompile your XSL file if
+it’s newer than the corresponding SEF file.</para>
+
+<para>That’s going to save you some time!</para>
+</chapter>
+
+<chapter>
+<title>Understanding recipe markup</title>
+
+<para>Recipe markup
+<link xlink:href="https://www.balisage.net/Proceedings/vol25/html/Flynn01/BalisageVol25-Flynn01.html">can be done well</link>, or it can be done like we have here. Sort of half-baked.</para>
+
+<para>The important part here is that it’s not too complicated. Each recipe has:</para>
+
+<itemizedlist>
+<listitem>
+<para>A title
+</para>
+</listitem>
+<listitem>
+<para>A category
+</para>
+</listitem>
+<listitem>
+<para>A number of servings
+</para>
+</listitem>
+<listitem>
+<para>A list of ingredients, with quantities and measurements specified explicitly.
+</para>
+</listitem>
+<listitem>
+<para>A set of directions, which may also contain measurements.
+</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>Exercise 5 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex05"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>Review the recipe markup. This will probably be easiest by just
+opening each of the recipe files in your favorite editor.</para>
+
+<para>They’re in HTML, but think about how the significant features
+are represented.</para>
+
+<itemizedlist>
+<listitem>
+<para>Title, category, and number of servings.
+</para>
+</listitem>
+<listitem>
+<para>Ingredients and directions.
+</para>
+</listitem>
+<listitem>
+<para>Quantities and units in ingredients.
+</para>
+</listitem>
+<listitem>
+<para>Quantities and units in the directions.
+</para>
+</listitem>
+</itemizedlist>
+
+</chapter>
+
+<chapter>
+<title>Recipe markup review</title>
+
+<para>A partially elided recipe:</para>
+
+<programlisting language="xml"><![CDATA[<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Pizza</title>
+<meta charset="utf-8" />
+<meta name="category" content="main"/>
+<meta name="credit" content="Paul Grosso"/>
+</head>
+<body>
+<main id="main">
+<p>Serves <span id="serves">4</span>.</p>
+<div id="ingredients">
+<ul>
+<li x-quantity="3" x-units="cup">3 cup <span>flour</span></li>
+<li x-quantity="1" x-units="tsp">1 tsp <span>salt</span></li>
+…
+</ul>
+</div>
+<div id="directions">
+<ol>
+<li>Put dry ingredients into food processor (preferably, though not
+…
+is about <span x-quantity="12" x-units="in">12 inches</span> in
+diameter or so.)</li>
+…
+</html>]]></programlisting>
+</chapter>
+
+<chapter>
+<title>Lunch break</title>
+
+<para>After lunch…</para>
+
+<itemizedlist>
+<listitem>
+<para>Accessing the browser DOM
+</para>
+</listitem>
+<listitem>
+<para>Updating the web page
+</para>
+</listitem>
+<listitem>
+<para>Interactivity
+</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>ixsl:page()</title>
+
+<para>The browser’s DOM (document object model) is not an instance
+of the XDM (XPath Data Model).</para>
+<para>That’s a problem, because XPath and XSLT operate on XDMs.</para>
+<para>Enter <code>ixsl:page()</code></para>
+<para>The extension function <code>ixsl:page()</code> returns the browser’s
+“current page” with enough shims around it so that it can be treated as an XDM.</para>
+
+</chapter>
+
+<chapter>
+<title>xsl:result-document in SaxonJS</title>
+
+<para>You’ve seen <tag>xsl:result-document</tag> in a few of the exercises, but it’s
+time we explained what’s going on.</para>
+
+<itemizedlist>
+<listitem>
+<para>The <tag>xsl:result-document</tag> instruction is used to create a secondary result.
+</para>
+</listitem>
+<listitem>
+<para>SaxonJS leverages this to produce results “on” the browser’s web page.
+</para>
+</listitem>
+<listitem>
+<para>If the <tag class="attribute">href</tag> attribute begins with “#”, for example
+<code>#main</code>, SaxonJS will put the secondary result in the web page element with the
+corresponding id, “<code>main</code>” in this case.
+</para>
+</listitem>
+<listitem>
+<para>By default, the secondary result is appended to the end of the content on the web page.
+</para>
+</listitem>
+<listitem>
+<para>If you specify the <tag class="attribute">method</tag>, “<code>ixsl:replace-content</code>”,
+it will replace the entire contents. (You can specify <code>ixsl:append-content</code> explicitly,
+if you wish.)
+</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>Exercise 6 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex06"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>A little warmup exercise with the recipe markup.</para>
+
+<para>You will have noticed in the preceding exercise, and maybe in
+the recipe you used for <link linkend="ex04">exercise 4</link>, that
+there are no heading elements in the recipe pages.</para>
+
+<para>The markup vocabulary designer has taken the position that the
+title shouldn’t be repeated in the “source” markup, because repeating
+information introduces the risk of discrepancy. The titles for the
+sections have also been left out because they can be automatically
+generated.</para>
+
+<para>Write a stylesheet that does an “almost identity” transform but copies
+the HTML title as a top-level H1 and adds “Ingredients” and
+“Directions” headings as H2 elements in the relevant sections.</para>
+
+<para>Remember that you can take advantage of the server to do some of the
+tedious work for you. Point your browser at one of the recipes, for
+example:</para>
+
+<screen>http://localhost:9000/recipes/pizza.html?exercise=ex06</screen>
+
+<para>You can then edit the stylesheet (<filename>ex06.xsl</filename>)
+and reload to see your progress. When you think it’s working, try it
+out on some of the other recipes, for example Macaroni and Cheese:</para>
+
+<screen>http://localhost:9000/recipes/mac-n-cheese.html?exercise=ex06</screen>
+
+<para>Code hints:</para>
+
+<orderedlist>
+<listitem>
+<para>Get the transform to start modifying the <tag>main</tag> element from the
+initial template using something like:
+</para>
+<programlisting language="xml"><![CDATA[<xsl:result-document href="#main" method="ixsl:replace-content">
+  <xsl:apply-templates select="ixsl:page()//main"/>
+</xsl:result-document>]]></programlisting>
+</listitem>
+<listitem>
+<para>Add templates that match on <tag>main</tag>,
+<code>div[@id='ingredients']</code> and <code>div[@id='directions']</code>,
+starting with something like this:
+</para>
+<para>For the main section, copy the HTML title:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:template match="main">
+  <h1><xsl:sequence select="string(/html/head/title)"/></h1>
+  <xsl:apply-templates select="node()"/>
+</xsl:template>]]></programlisting>
+
+<para>For the ingredients and directions, generate the titles, like this:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:template match="div[@id='ingredients']">
+  <xsl:copy>
+    <xsl:apply-templates select="@*"/>
+    <h2>Ingredients</h2>
+    <xsl:apply-templates select="node()"/>
+  </xsl:copy>
+</xsl:template>]]></programlisting>
+</listitem>
+</orderedlist>
+<para>We’ll jump right into exercise 7 next, so feel free to peek ahead after
+you’ve finished this exercise.</para>
+</chapter>
+
+<chapter>
+<title>Exercise 7 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex07"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>Let’s make a more interesting change to the markup this time.
+Over the next few exercises, we’re going to make it possible to change
+the number of servings and have the recipe recalculate the ingredients
+quantities automatically.</para>
+
+<para>As a first step, let’s replace the “servings” text with a pull
+down menu. If you don’t remember the HTML for a pull down, it looks
+like this:</para>
+
+<programlisting language="xml"><![CDATA[<select>
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="4">4</option>
+  <option value="6">6</option>
+</select>]]></programlisting>
+
+<para>Start with either your answer from exercise 6, or ours.
+Whichever you prefer.</para>
+
+<para>You can influence which option the browser treats as initially
+selected with a <tag class="attribute">selected</tag> attribute. For
+example:</para>
+
+<programlisting language="xml"><![CDATA[<select>
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option selected="selected" value="4">4</option>
+  <option value="6">6</option>
+</select>]]></programlisting>
+
+<para>One approach to make the initial selection match the default is to
+capture the default value in a variable and make a list of the
+servings sizes you want to display.</para>
+
+<!--
+<programlisting language="xml"><![CDATA[<xsl:variable name="default"
+              select="xs:int(.)"/>
+<xsl:variable name="servings"
+     select="distinct-values(($default, 1, 2, 4, 6, 8))"/>]]></programlisting>
+
+<para>Make sure the default is in the list and then use
+<function>distinct-values</function> to make sure it doesn’t appear
+twice. (You could add <function>sort</function> to put them back in
+numerical order.)</para>
+
+<para>When you generate the <tag>select</tag> element, compare the
+current value against the default and add
+<tag class="attribute">selected</tag> where
+appropriate:</para>
+
+<programlisting language="xml"><![CDATA[<select id="serves">
+  <xsl:for-each select="$servings">
+    <option value="{.}">
+      <xsl:if test=". = $default">
+        <xsl:attribute name="selected" select="'selected'"/>
+      </xsl:if>
+      <xsl:sequence select="."/>
+    </option>
+  </xsl:for-each>
+</select>]]></programlisting>
+-->
+</chapter>
+
+<chapter>
+<title>Browser events</title>
+
+<para>To make our recipes into a web <emphasis>application</emphasis>
+we need to respond to user events. To do that, we have to understand
+what happens when you poke the browser.</para>
+
+<itemizedlist>
+<listitem>
+<para>The browser detects user interaction and generates (or “fires”)
+a corresponding event object: click, change, select, scroll,
+etc. (There’s a more complete list in <xref
+linkend="ref.events"/>.)</para>
+</listitem>
+<listitem>
+<para>The event contains details about the interaction: key pressed, mouse button
+clicked, etc. (Exactly what it contains depends on the kind of event.)
+</para>
+</listitem>
+<listitem>
+<para>The browser looks for code to handle the event. It looks on the element where the event occurred (the button or scroll bar or input field, for example), then its parent, then its grand parent,
+etc. This is called “bubbling” up.</para>
+</listitem>
+<listitem>
+<para>Anywhere it finds an “event handler”, it runs that code.</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>Did you change that?</title>
+
+<para>You respond to an event in XSLT by writing templates in a mode that corresponds
+to the category of event.</para>
+
+<itemizedlist>
+<listitem>
+<para>Suppose, for example, you wanted to respond when someone changed a <tag>select</tag>
+pulldown.</para>
+</listitem>
+<listitem>
+<para>The event that fires when you change an HTML element is the “<code>change</code>”
+event.</para>
+</listitem>
+<listitem>
+<para>If you write a template in the <code>ixsl:onchange</code> mode, it will fire
+when the element changes. For example:
+</para>
+<programlisting language="xml"><![CDATA[<xsl:template match="select" mode="ixsl:onchange">
+  …
+</xsl:template>]]></programlisting>
+</listitem>
+</itemizedlist>
+
+<para>Generally, you can respond to any “<replaceable>eventname</replaceable>”
+event by writing a template in the “<code>ixsl:on<replaceable>eventname</replaceable></code>”
+mode.</para>
+
+</chapter>
+
+<chapter>
+<info>
+<title>What did you change?</title>
+<annotation annotates="dotnote">
+<para>JavaScript uses “dot notation” to navigate in objects. To get the
+“c” property of the “b” property of the “a” object, you write <code>a.b.c</code>
+</para>
+<para>You can use that notation in <function>ixsl:get()</function>.</para>
+<para>So, technically, this example returns the “<code>value</code>” property
+of the “<code>target</code>” property of the current event.</para>
+</annotation>
+</info>
+
+<para>Within a template that’s responding to an event, you can use the
+<function>ixsl:event()</function> function to get the event object.</para>
+
+
+<para><emphasis>Unfortunately</emphasis>, that’s a browser object and not a (useful) XDM
+item.</para>
+
+<para>However, you can use the
+<function>ixsl:get()</function> function to interrogate browser objects!
+</para>
+
+<para>For example, you can get the
+<phrase xml:id="dotnote">“<code>target.value</code>” property</phrase> of the
+current event with:</para>
+
+<programlisting language="xpath">ixsl:get(ixsl:event(), 'target.value'))</programlisting>
+</chapter>
+
+<chapter>
+<title>Exercise 8 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex08"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>It’s time to get (mildly) interactive.</para>
+
+<para>Starting with the results of the previous exercise, add a
+template that will fire when the user selects a different value for
+the number of servings.</para>
+
+<para>Detect the <code>change</code> event on the <code>select</code> element.
+</para>
+
+<para>In future exercises, we’ll look at the larger problem of
+actually updating the recipe.</para>
+
+<para>For this exercise, just do something really simple to
+demonstrate that you’ve captured the event. For example:</para>
+
+<itemizedlist>
+<listitem>
+<para>Use <tag>xsl:message</tag> to write a message to the console,
+</para>
+</listitem>
+<listitem>
+<para>or use <tag>xsl:result-document</tag> to update some part of the page,
+</para>
+</listitem>
+</itemizedlist>
+
+<para>(If you choose to use <tag>xsl:message</tag>, remember that
+you’ll have to look at the browser console window to see the output!)
+</para>
+
+<para>The event-handling template should look like this:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:template match="select" mode="ixsl:onchange">
+  ...
+</xsl:template>]]></programlisting>
+
+<para>(We’ve provided an alternate answer “8b” that uses a couple of
+extra extension functions to pop up a browser alert box. The functions
+are described in the appendixes.)</para>
+
+<para>Once again, we’ll jump right into the next exercise, so feel
+free to peek ahead after you’ve finished this exercise.</para>
+</chapter>
+
+<chapter>
+<title>Exercise 9 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex09"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>Continue where you left off in exercise 8.</para>
+
+<para>When a user changes the number of servings, update all of the
+quantities in the recipe.</para>
+
+<para>One way to do this is:</para>
+
+<itemizedlist>
+<listitem>
+<para>Compute a scaling factor. If the original recipe was for 4
+servings and the user has selected 6, the scaling factor would be 1.5
+(i.e., 6 div 4). (Note that you’ll have to find a way to remember the
+original number of servings to make this work).
+</para>
+</listitem>
+<listitem>
+<para>Reformat the ingredients section in a mode that multiplies by
+the scaling factor.
+</para>
+</listitem>
+<listitem>
+<para>Use <tag>xsl:result-document</tag> to update the ingredients.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>Code hints:</para>
+
+<para>Recall that you can get the value of the option that the user selected
+from the <code>target.value</code> property with:
+<code>ixsl:get(ixsl:event(),'target.value'))</code>
+</para>
+</chapter>
+
+<chapter>
+<title>?.</title>
+
+<para>Sometimes, you’ll want to update an element that doesn’t have an ID.
+For example, the proposed solution to the previous exercise suggests replacing
+the entire ingredients section to update the quantities, but the title and any
+other prose in the section won’t be changed.</para>
+
+<para>The browser is optimized for making small changes to the page. Never do more
+work than you have to!</para>
+
+<para>If the current context item is a node “under”
+<function>ixsl:page()</function>, you can update it directly with the
+special <tag class="attribute">href</tag> value “<code>?.</code>”. For
+example:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:template match="li[@x-quantity]">
+  <xsl:result-document href="?." method="ixsl:replace-content">
+    <!-- compute new list item here -->
+  </xsl:result-document>
+</xsl:template>]]></programlisting>
+</chapter>
+
+<chapter>
+<title>Exercise 9 (continued) <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex09"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>Update your answer to exercise 9 so that it only updates the individual
+elements that need to be changed.</para>
+
+<para>Code hints:</para>
+
+<para>If the current context item is a node “under”
+<function>ixsl:page()</function>, you can update it directly with the
+special href value “<code>?.</code>”. For example:</para>
+
+<programlisting language="xml"><![CDATA[<xsl:template match="li[@x-quantity]">
+  <xsl:result-document href="?." method="ixsl:replace-content">
+    <!-- compute new list item here -->
+  </xsl:result-document>
+</xsl:template>]]></programlisting>
+</chapter>
+
+<chapter>
+<title>The JavaScript event loop</title>
+
+<orderedlist>
+<listitem>
+<para><emphasis>JavaScript is single threaded</emphasis>, that means
+it can only do one thing at a time.
+</para>
+</listitem>
+<listitem>
+<para><emphasis>The JavaScript scheduler is non-preemptive</emphasis>, that means you
+have control until you voluntarily relinquish it. (Sort of.)
+</para>
+</listitem>
+</orderedlist>
+</chapter>
+
+<chapter>
+<title>Exercise 10 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex10"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>Examine the stylesheet <filename>ex10.xsl</filename>.
+</para>
+
+<itemizedlist>
+<listitem>
+<para>What do you think it does?
+</para>
+</listitem>
+<listitem>
+<para>How will the browser respond?
+</para>
+</listitem>
+</itemizedlist>
+
+<para>Run it and find out!</para>
+
+<para><link xlink:href="http://localhost:9000/recipes/pizza.html?exercise=ex10"/>
+</para>
+
+<para>(It doesn’t matter which recipe you use, and you’ll have to wait
+a couple of minutes to see all of the results.)</para>
+
+</chapter>
+
+<chapter>
+<title>ixsl:schedule-action (1/2)</title>
+
+<para>JavaScript (and JavaScript APIs) support “reliquishing control” through callbacks
+or, in modern parlance “promises”. SaxonJS uses <tag>ixsl:schedule-action</tag>.</para>
+
+<para>There are three flavors of scheduled action:</para>
+
+<itemizedlist>
+<listitem>
+<para>Wait until documents are available.
+</para>
+</listitem>
+<listitem>
+<para>Wait for an HTTP request to complete.
+</para>
+</listitem>
+<listitem>
+<para>Wait for a specified number of seconds.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>You can have more than one scheduled action in progress.</para>
+
+</chapter>
+
+<chapter>
+<title>ixsl:schedule-action (2/2)</title>
+
+<para>The <tag>ixsl:schedule-action</tag> element wraps a <tag>xsl:call-template</tag>
+(and nothing else!). The template specified will be called when the scheduled action
+is complete.</para>
+
+<para>For example:</para>
+
+<programlisting language="xml"><![CDATA[<ixsl:schedule-action wait="{$seconds * 1000}">
+  <xsl:call-template name="update-clock"/>
+</ixsl:schedule-action>]]></programlisting>
+
+<para>Or, perhaps more commonly:</para>
+
+<programlisting language="xml"><![CDATA[<ixsl:schedule-action document="{$endpoint}">
+  <xsl:call-template name="process-reply"/>
+</ixsl:schedule-action>]]></programlisting>
+
+<para>Note: <tag>ixsl:schedule-action</tag> doesn’t deliver the resulting document
+to the called template. It merely assures that the document is in SaxonJS’s cache of
+available documents. You have to use <function>doc()</function> or
+<function>json-doc()</function> to access the data.</para>
+</chapter>
+
+<chapter>
+<info>
+<title>Exercise 11 <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex11"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+<annotation annotates="endpoint">
+<para>This isn’t an endpoint in any real sense because we don’t have
+any sort of database in this tutorial. It’s just a JSON document. But
+the principles are exactly the same.
+</para>
+</annotation>
+</info>
+
+<para>Stepping back from the individual recipes, let’s make an overview page.</para>
+
+<para>Each recipe has a category. The <phrase xml:id="endpoint">“endpoint”</phrase>
+<link xlink:href="http://localhost:9000/recipes/categories.json"/>
+returns a JSON payload that identifies each recipe by category:
+</para>
+
+<programlisting language="json">{
+  "main": ["beef-stroganof.html", "mac-n-cheese.html",
+           "marys-beef-stew.html", "pizza.html"],
+  "side": ["rice-a-roni.html"],
+  "candy": ["treacle-taffy.html"]
+}</programlisting>
+
+<para>Write a stylesheet that will retrieve this document and let the
+user navigate between categories and recipes.</para>
+
+<itemizedlist>
+<listitem>
+<para>Start with the categories HTML file:
+<link xlink:href="http://localhost:9000/recipes/categories.html"/>.</para>
+</listitem>
+<listitem>
+<para>Write a stylesheet that formats the “<code>categories</code>”
+division with the list of categories.
+</para>
+</listitem>
+<listitem>
+<para>If you have time, make the stylesheet display all of the recipes
+in each category when a category is selected.
+</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>Exercise 12 (Ambitious) <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex12"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para><link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex12">Exercise 12</link></para>
+
+<para>Pretty much everyone outside North America is going to find
+these recipes confusing. Tablespoons of butter? Cups of flour? What is
+wrong with these Americans?</para>
+
+<para>Write a stylesheet that adds a “conversion” menu next to the
+servings menu. Allow the user to select either “Imperial” or “Metric”
+units.</para>
+
+<para>Here’s a handy guide to conversions between imperial and metric units:</para>
+
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row><entry>Imperial</entry><entry>Metric</entry>
+</row>
+</thead>
+<tbody>
+<row><entry>1 tsp</entry><entry>6ml (roughly)</entry></row>
+<row><entry>1 Tbs</entry><entry>15ml</entry></row>
+<row><entry>1 cup</entry><entry>284ml</entry></row>
+<row><entry>1 lb</entry><entry>0.454kg</entry></row>
+<row><entry>1 oz</entry><entry>28.35g</entry></row>
+<row><entry>1 qt</entry><entry>1.137ℓ</entry></row>
+<row><entry>1 in</entry><entry>2.54cm</entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>To convert from °F to °C, subtract 32 and then multiply by 5/9.</para>
+</chapter>
+
+<chapter>
+<title>Exercise 13 (More ambitious) <link
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex13"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+
+<para>Imperial to metric conversions are only half the battle. No rational
+person measures butter or flour by volume.</para>
+
+<para>Redraft your solution to exercise 12 by first loading the conversion
+guide in <link xlink:href="http://localhost:9000/lib/conversions.json"/> using
+<tag>ixsl:schedule-action</tag>.</para>
+
+<para>For each ingredient, the conversion table gives the conversion factor
+and the resulting units. So, for example, 3 Tbs of butter is about 43g.</para>
+
+</chapter>
+</part>

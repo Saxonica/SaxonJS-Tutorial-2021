@@ -81,8 +81,7 @@
 <!-- ============================================================ -->
 
 <xsl:template match="*" mode="m:html-head-links">
-  <script type="text/javascript"
-          src="https://kit.fontawesome.com/c94d537c36.js" crossorigin="anonymous"/>
+  <script src="https://kit.fontawesome.com/5f1e765bbe.js" crossorigin="anonymous"/>
 </xsl:template>
 
 <xsl:template match="db:chapter[@xml:id='closing']" mode="m:docbook">
@@ -212,6 +211,8 @@
   <div class="infofooter">
     <!-- This is a terrible hack -->
     <span style='float: right;'>
+      <span>Version 1.0.2</span>
+      <xsl:text> </xsl:text>
       <a title="Chapter 1" href="ch01.html"><i class="fas fa-arrow-right"></i></a>
     </span>
     <span class="copyrightfooter">

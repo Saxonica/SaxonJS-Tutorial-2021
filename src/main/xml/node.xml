@@ -1,0 +1,160 @@
+<part xmlns="http://docbook.org/ns/docbook"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xml:id="node" version="5.1">
+<title>SaxonJS in Node.js</title>
+
+<chapter>
+<title>What is Node?</title>
+
+<blockquote>
+<attribution>Nodejs.org website</attribution>
+<para>Node.js is an open-source and cross-platform JavaScript runtime
+environment. It is a popular tool for almost any kind of
+project!</para>
+</blockquote>
+
+<itemizedlist>
+<listitem>
+<para>Popular server-side application development environment
+</para>
+</listitem>
+<listitem>
+<para>Very large ecosystem of tools and packages
+</para>
+</listitem>
+</itemizedlist>
+
+</chapter>
+
+<chapter>
+<title>Why SaxonJS on Node?</title>
+
+<itemizedlist>
+<listitem>
+<para>Lots of applications have been, are being, or will be developed on Node.js.
+</para>
+</listitem>
+<listitem>
+<para>The large ecosystem of existing tools on Node.js makes it an appealing
+platform.
+</para>
+</listitem>
+<listitem>
+<para>JavaScript is not renowned for its excellent XML support.
+</para>
+</listitem>
+<listitem>
+<para>SaxonJS provides full-service XPath and XSLT 3.0 features on Node.js.
+</para>
+</listitem>
+</itemizedlist>
+
+</chapter>
+
+<chapter>
+<title>SaxonJS on Node</title>
+
+<para>SaxonJS is composed of two Node.js packages:</para>
+
+<itemizedlist>
+<listitem>
+<para><code>saxon-js</code> is the SaxonJS implementation.</para>
+</listitem>
+<listitem>
+<para><code>xslt3</code> is a command line tool for performing transformations
+(and compiling XSL files to SEF).
+</para>
+</listitem>
+</itemizedlist>
+</chapter>
+
+<chapter>
+<title>Installing SaxonJS on Node</title>
+
+<para>Add the dependency to your <filename>package.json</filename>
+file, for example:</para>
+
+<programlisting language="json">{
+  "dependencies": {
+    "saxon-js": "^2.3.0",
+    "xslt3": "^2.3.0"
+  }
+}</programlisting>
+
+<para>Then run <code>npm install</code>.</para>
+
+</chapter>
+
+<chapter>
+<title>Using SaxonJS on Node</title>
+
+<para>On Node.js, you must explicitly import the SaxonJS object with
+<code>require</code>. Then you can use any of it’s APIs directly
+from JavaScript.</para>
+
+<para>The following Node.js program uses XPath to calculate the number
+of days until Christmas.</para>
+
+<programlisting language="javascript"><![CDATA['use strict';
+const SaxonJS = require('saxon-js');
+const DECEMBER = 11; // 0-based counting!
+
+const today = new Date();
+let year = today.getFullYear();
+if (today.getMonth() == DECEMBER
+    && today.getDate() >= 25) {
+  year += 1;
+}
+
+let christmas = `${year}-12-25`;
+let options = { "params": {"Q{}christmas": christmas} };
+
+let days = SaxonJS.XPath.evaluate(
+  `let $duration := xs:date($christmas) - current-date()
+   return
+     if ($duration <= xs:dayTimeDuration("P1D"))
+     then 'Christmas is TOMORROW!'
+     else 'It''s '
+          || days-from-duration($duration)
+          || ' days ''til Christmas'`,
+  null, options);
+
+console.log(days);]]></programlisting>
+</chapter>
+
+<chapter>
+<title>Transforming documents with XSLT</title>
+
+<para>You can use <filename>xslt3.js</filename> to transform documents.
+For example:</para>
+
+<programlisting>$ node node_modules/xslt3/xslt3.js \
+  -s:mydoc.xml -xsl:tohtml.xsl -o:mydoc.html</programlisting>
+
+<para>(You can use <code>SaxonJS.transform()</code> directly
+in your Node.js programs.)</para>
+
+<para>You can use <filename>xslt3.js</filename> to compile stylesheets into SEF files,
+<link linkend="compiling">as we saw earlier</link>.</para>
+
+</chapter>
+
+<chapter xml:id="thanks">
+<title>Thank you!</title>
+
+<para>That’s our tutorial!</para>
+
+<para>We have been Norm Tovey-Walsh and Debbie Lockett.</para>
+
+<para>You have been delightful!</para>
+
+<para>Feel free to follow up with questions and comments in Slack or
+by email.</para>
+
+<para><link xlink:href="https://github.com/saxonica/SaxonJS-Tutorial-2021/"/>
+</para>
+</chapter>
+
+
+</part>
