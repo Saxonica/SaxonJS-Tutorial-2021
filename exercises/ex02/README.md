@@ -10,6 +10,12 @@ We’ll cover how you compile an XSLT stylesheet into a “SEF” file in the ne
 ```
 3. Add a script to run the `ex02.xsl` stylesheet in its compiled form: `ex02.sef.json`:
 ```
-<script>SaxonJS.transform({ stylesheetLocation: "ex02.sef.json" }, "async");</script>
+<script>
+  window.onload = function() {
+    SaxonJS.transform(
+      { stylesheetLocation: "ex02.sef.json" },
+      "async");
+  }
+</script>
 ```
 4. Load the answer into your browser `http://localhost:9000/exercises/ex02`
