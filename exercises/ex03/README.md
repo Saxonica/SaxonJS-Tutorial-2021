@@ -24,7 +24,7 @@ and other Java infrastructure is set up correctly.
 If you’re using Node, you can compile the stylesheet by running
 
 ```
-./gradlew -Pxsl=exercises/ex03/ex03.xsl xslt3
+./gradlew -Pxsl=exercises/ex03/ex03.xsl node_xslt3
 ```
 
 That’s the equivalent of running
