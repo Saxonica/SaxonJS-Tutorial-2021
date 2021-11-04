@@ -520,7 +520,7 @@ and other Java infrastructure is set up correctly.</para>
 
 <para>If you’re using Node, you can compile the stylesheet by running</para>
 
-<screen>./gradlew -Pxsl=exercises/ex03/ex03.xsl xslt3</screen>
+<screen>./gradlew -Pxsl=exercises/ex03/ex03.xsl node_xslt3</screen>
 
 <para>That’s the equivalent of running</para>
 
