@@ -11,6 +11,8 @@
 
 <xsl:output method="html" html-version="5" encoding="utf-8" indent="no"/>
 
+<xsl:mode on-no-match="shallow-copy"/>
+
 <xsl:template name="xsl:initial-template">
   <xsl:result-document href="#main" method="ixsl:replace-content">
     <xsl:apply-templates select="ixsl:page()//main"/>
@@ -56,16 +58,6 @@
     <h2>Directions</h2>
     <xsl:apply-templates select="node()"/>
   </xsl:copy>
-</xsl:template>
-
-<xsl:template match="element()">
-  <xsl:copy>
-    <xsl:apply-templates select="@*,node()"/>
-  </xsl:copy>
-</xsl:template>
-
-<xsl:template match="attribute()|text()|comment()|processing-instruction()">
-  <xsl:copy/>
 </xsl:template>
 
 </xsl:stylesheet>
