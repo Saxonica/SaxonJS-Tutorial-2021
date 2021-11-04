@@ -1,6 +1,6 @@
 # SaxonJS-Tutorial-2021, version 1.0.2
 
-Last updated on 3 November, 2021.
+Last updated on 4 November, 2021.
 
 **Table of contents**
 + [Background](#Background)
@@ -28,6 +28,13 @@ unzipping it somewhere on your local system.
 If you have any questions or problems, please
 [let us know](mailto:norm@saxonica.com) or open an
 issue.
+
+The tutorial is configured to run a web server on port 9000. If you have another
+application running on that port, it may be simplest to just stop that application
+while you’re doing the tutorial. Alternatively, you can checkout the `configure-port`
+branch of this repository. On that branch, you can change the port number in
+`gradle.properties`. (At some point after the tutorial is given, we’ll merge
+that branch in to `main` but it’s much too risky to do that this morning!)
 
 ## Background
 
