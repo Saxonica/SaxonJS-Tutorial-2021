@@ -75,8 +75,23 @@ you cloned the repository. (Even when you’re doing the exercises, the server
 should always be started in the “top level” directory.)</para>
 </listitem>
 <listitem>
-<para>Run <code>./gradlew pythonServerStart</code> (on Windows, use
+<para>Run the tutorial web server:</para>
+<itemizedlist>
+<listitem>
+<para>Run <code>./gradlew pythonServerStart</code>,
+if you prefer the Python version.</para>
+<para>(On Windows, use
 <code>.\gradlew</code> everwhere we say <code>./gradlew</code>!)</para>
+</listitem>
+<listitem>
+<para>Run <code>./gradlew nodeServerStart</code>,
+if you prefer the Node.js version.</para>
+</listitem>
+<listitem>
+<para>Run <code>./gradlew dockerServerStart</code>, 
+if you prefer the Docker container version.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 <listitem>
 <para>Open <link xlink:href="http://localhost:9000/hello"/> in your
