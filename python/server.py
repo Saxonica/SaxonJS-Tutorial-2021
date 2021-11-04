@@ -243,7 +243,26 @@ class TutorialServer(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     sys.stdout = Unbuffered(sys.stdout)
     sys.stderr = Unbuffered(sys.stderr)
-    
+
+    # Crudely look to see if an alternate port has been suggested
+    pos = 0
+    userport = str(HOSTPORT)
+    while pos < len(sys.argv):
+        if sys.argv[pos] == "-p":
+            if pos +1 < len(sys.argv):
+                userport = sys.argv[pos + 1]
+            else:
+                userport = ""
+        elif sys.argv[pos].startswith("-p"):
+            userport = sys.argv[pos][2:]
+        pos += 1
+
+    try:
+        HOSTPORT = int(userport)
+    except ValueError:
+        print(f"Invalid port specified: {userport}. Port must be an integer > 1024.")
+        sys.exit(1)
+        
     server = HTTPServer((HOSTNAME, HOSTPORT), TutorialServer)
     print("Server started on http://%s:%s" % (HOSTNAME, HOSTPORT))
 

@@ -79,6 +79,7 @@ tools.keySet().each { tool ->
 }
 
 println("Building with Java version ${System.getProperty('java.version')}")
+def imageTag = "version${version.replace('.', '')}"
 
 // ============================================================
 
@@ -166,7 +167,8 @@ task pythonServerStart(dependsOn: ['pythonServerStop']) {
   // We do this the hard way so that we can report the unbuffered
   // output from the script in realtime.
   doLast {
-    def builder = new ProcessBuilder([python3, "python/server.py"])
+    def builder = new ProcessBuilder(
+      [python3, "python/server.py", "-p", serverPort])
     def process = builder.start()
     def stdoutReader = new ProcessOutputReader(process.getInputStream())
     def stderrReader = new ProcessOutputReader(process.getErrorStream())
@@ -209,6 +211,7 @@ task nodeServerStart(type: Exec) {
     dir = Paths.get(projectDir.toString()).resolve(rootProject.ext.dir)
   }
 
+  environment "PORT", serverPort
   workingDir = "node"
   commandLine "node", "server.js"
   ignoreExitValue = true
@@ -285,11 +288,15 @@ task dockerServerStart(type: Exec, dependsOn: ['pullContainer']) {
     killContainer()
   }
 
+  // It would be more customary here to run the server in the
+  // container on port 80, but that leads to a slightly misleading
+  // message, so we simply run it on the same port that we're going
+  // to map to.
   commandLine docker,
-    "run", "--rm", "-p", "${serverPort}:80",
+    "run", "--rm", "-p", "${serverPort}:${serverPort}",
     "-v", "${dir}:/src",
     "-e", "ROOTDIR=/src",
-    "-e", "PORT=80",
+    "-e", "PORT=${serverPort}",
     "${dockerImage}:${imageTag}"
   ignoreExitValue = true
 }
@@ -462,6 +469,8 @@ task presentation(type: SaxonXsltTask, dependsOn: ['validatePresentation']) {
     'annotation-style': 'javascript',
     'profile-outputformat': 'online',
     'persistent-toc': true,
+    'tutorial-version': version,
+    'server-port': serverPort
   )
 }
 

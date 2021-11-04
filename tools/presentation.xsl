@@ -8,6 +8,7 @@
                 xmlns:m="http://docbook.org/ns/docbook/modes"
                 xmlns:t="http://docbook.org/ns/docbook/templates"
                 xmlns:v="http://docbook.org/ns/docbook/variables"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 exclude-result-prefixes="#all"
                 version="3.0">
@@ -21,6 +22,8 @@
 
 <xsl:param name="persistent-toc" select="'true'"/>
 <xsl:param name="verbatim-numbered-elements" select="''"/>
+<xsl:param name="tutorial-version" required="yes"/>
+<xsl:param name="server-port" required="yes"/>
 
 <xsl:param name="css-links"
            select="'css/docbook.css css/docbook-screen.css css/presentation.css'"/>
@@ -66,7 +69,6 @@
   </span>
 </xsl:template>
   
-
 <xsl:template match="db:affiliation" mode="m:titlepage">
   <xsl:apply-templates select="db:orgname/node()" mode="m:docbook"/>
 </xsl:template>
@@ -84,36 +86,26 @@
   <script src="https://kit.fontawesome.com/5f1e765bbe.js" crossorigin="anonymous"/>
 </xsl:template>
 
-<xsl:template match="db:chapter[@xml:id='closing']" mode="m:docbook">
-  <xsl:variable name="slide">
-    <xsl:next-match/>
-  </xsl:variable>
-  <xsl:apply-templates select="$slide/node()" mode="insert-xavier"/>
-</xsl:template>
-
 <!-- ============================================================ -->
 
-<xsl:template match="/" mode="insert-xavier">
-  <xsl:apply-templates mode="insert-xavier"/>
+<xsl:template match="db:link[@xlink:href]" mode="m:docbook">
+  <xsl:variable name="href"
+                select="replace(@xlink:href, 'PORT', $server-port)
+                        => replace('9000', $server-port)"/>
+  <a href="{$href}">
+    <xsl:choose>
+      <xsl:when test="empty(node())">
+        <xsl:sequence select="$href"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="node()" mode="m:docbook"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </a>
 </xsl:template>
 
-<xsl:template match="h:div[@class='chapter']/h:header" mode="insert-xavier">
-  <xsl:copy>
-    <xsl:apply-templates select="@*" mode="insert-xavier"/>
-    <img class="float" src="Xavier.png" alt="Xavier (XML Resolver mascot)"/>
-    <xsl:apply-templates select="node()" mode="insert-xavier"/>
-  </xsl:copy>
-</xsl:template>
-
-<xsl:template match="element()" mode="insert-xavier">
-  <xsl:copy>
-    <xsl:apply-templates select="@*,node()" mode="insert-xavier"/>
-  </xsl:copy>
-</xsl:template>
-
-<xsl:template match="attribute()|text()|comment()|processing-instruction()"
-              mode="insert-xavier">
-  <xsl:copy/>
+<xsl:template match="processing-instruction('port')">
+  <xsl:sequence select="$server-port"/>
 </xsl:template>
 
 <!-- ============================================================ -->
@@ -211,7 +203,7 @@
   <div class="infofooter">
     <!-- This is a terrible hack -->
     <span style='float: right;'>
-      <span>Version 1.0.2</span>
+      <xsl:sequence select="'Version ' || $tutorial-version"/>
       <xsl:text> </xsl:text>
       <a title="Chapter 1" href="ch01.html"><i class="fas fa-arrow-right"></i></a>
     </span>

@@ -205,5 +205,6 @@ function fakeicon(request, response) {
 };
 
 server = app.listen(port, () => {
-  console.log(`NodeJS express server listening; server root is ${root}`);
+  console.log(`Node.js Express server listening on port ${port}.`);
+  console.log(`Server root directory: ${root}`);
 });
