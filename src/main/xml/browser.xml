@@ -1122,7 +1122,7 @@ item.</para>
 <phrase xml:id="dotnote">“<code>target.value</code>” property</phrase> of the
 current event with:</para>
 
-<programlisting language="xpath">ixsl:get(ixsl:event(), 'target.value'))</programlisting>
+<programlisting language="xpath">ixsl:get(ixsl:event(), 'target.value')</programlisting>
 </chapter>
 
 <chapter>
@@ -1207,7 +1207,7 @@ the scaling factor.
 
 <para>Recall that you can get the value of the option that the user selected
 from the <code>target.value</code> property with:
-<code>ixsl:get(ixsl:event(),'target.value'))</code>
+<code>ixsl:get(ixsl:event(),'target.value')</code>
 </para>
 </chapter>
 
