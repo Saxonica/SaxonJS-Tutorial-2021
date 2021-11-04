@@ -9,14 +9,12 @@
 
 <note>
 <title>A word about type conversion</title>
-<para>When interacting with JavaScript from XSLT, it is important to
+<para>When interacting with JavaScript from XSLT, and vice versa, it is important to
 be aware of type conversion: XDM to JavaScript, and JavaScript to XDM.
 </para>
 <para>The SaxonJS internal conversions are designed to do "what you'd
 expect", but there are times that this might not be straightforward.
 </para>
-<para>(Type conversion is also relevant when calling the SaxonJS API
-methods, e.g. for transform options.)</para>
 <para>We’re not going to try to explain all the conversions here,
 but <link xlink:href="https://www.saxonica.com/saxon-js/documentation/index.html#!xdm/conversions">the gory details</link> are all in
 <link xlink:href="https://www.saxonica.com/saxon-js/documentation/">the documentation</link>!</para>
@@ -592,7 +590,7 @@ context).</para>
 <section>
 <title>ixsl:set-attribute</title>
 
-<programlisting>&lt;ixsl:remove-attribute name="{eqname}"
+<programlisting>&lt;ixsl:set-attribute name="{eqname}"
                        select="expr"
                        object?="expr"/>
 </programlisting>

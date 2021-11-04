@@ -113,7 +113,7 @@ not “the right” way, it’s just the way that we thought was easiest/best/si
 
 <chapter>
 <title>Exercise 1 <link
-xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex1"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
+xlink:href="https://github.com/Saxonica/SaxonJS-Tutorial-2021/tree/main/exercises/ex01"><emphasis role="fa-solid fa-up-right-from-square"></emphasis></link></title>
 
 <para>This exercise is just to get you familiar with the “furniture”
 necessary to load SaxonJS into the browser.</para>
@@ -121,7 +121,7 @@ necessary to load SaxonJS into the browser.</para>
 <orderedlist>
 <listitem>
 <para>Open <filename>index.html</filename> in the
-<filename>exercises/ex1</filename> directory in your favorite editor.
+<filename>exercises/ex01</filename> directory in your favorite editor.
 </para>
 </listitem>
 <listitem>
@@ -312,8 +312,9 @@ make sure that doesn’t happen is with this incantation:</para>
 
 <programlisting language="xml"><![CDATA[<script>
   window.onload = function() {
-    SaxonJS.transform({ stylesheetLocation: "ex02.sef.json" },
-                      "async");
+    SaxonJS.transform(
+      { stylesheetLocation: "ex02.sef.json" },
+      "async");
   }
 </script>]]></programlisting>
 
@@ -344,9 +345,13 @@ stylesheet into a “SEF” file in the next exercise.</para>
 <para>Add a script to run the <filename>ex02.xsl</filename>
 stylesheet in its compiled form: <filename>ex02.sef.json</filename>:
 </para>
-<programlisting language="xml"><![CDATA[<script>SaxonJS.transform(
-  { stylesheetLocation: "ex02.sef.json" },
-  "async");</script>]]></programlisting>
+<programlisting language="xml"><![CDATA[<script>
+  window.onload = function() {
+    SaxonJS.transform(
+      { stylesheetLocation: "ex02.sef.json" },
+      "async");
+  }
+</script>]]></programlisting>
 </listitem>
 <listitem>
 <para>Load the answer into your browser
@@ -363,10 +368,13 @@ stylesheet in its compiled form: <filename>ex02.sef.json</filename>:
 <para>The secret sauce is another method on the <code>SaxonJS</code> object,
 <code>transform()</code>.</para>
 <para>The script element that you added:</para>
-<programlisting language="xml"><![CDATA[
-<script>SaxonJS.transform(
-   { stylesheetLocation: "ex02.sef.json" },
-   "async");</script>]]></programlisting>
+<programlisting language="xml"><![CDATA[<script>
+  window.onload = function() {
+    SaxonJS.transform(
+      { stylesheetLocation: "ex02.sef.json" },
+      "async");
+  }
+</script>]]></programlisting>
 <para>is evaluated by the JavaScript engine in the browser. That runs the
 “transform” function, which runs the stylesheet.</para>
 </chapter>
@@ -599,7 +607,7 @@ entirely in XSLT.</para>
 
 <chapter>
 <title>Where we’re heading</title>
-<para>If you complete all of the exercies, including the last couple
+<para>If you complete all of the exercises, including the last couple
 of “take home” assignments, you’ll
 <link xlink:href="/recipes/marys-beef-stew.html?answer=ex13">get something</link>,
 much more interactive:</para>
@@ -1142,7 +1150,7 @@ demonstrate that you’ve captured the event. For example:</para>
 </para>
 </listitem>
 <listitem>
-<para>or use <tag>xsl:result-document</tag> to update some part of the page,
+<para>or use <tag>xsl:result-document</tag> to update some part of the page.
 </para>
 </listitem>
 </itemizedlist>
@@ -1159,7 +1167,7 @@ you’ll have to look at the browser console window to see the output!)
 
 <para>(We’ve provided an alternate answer “8b” that uses a couple of
 extra extension functions to pop up a browser alert box. The functions
-are described in the appendixes.)</para>
+are described in the appendices.)</para>
 
 <para>Once again, we’ll jump right into the next exercise, so feel
 free to peek ahead after you’ve finished this exercise.</para>
