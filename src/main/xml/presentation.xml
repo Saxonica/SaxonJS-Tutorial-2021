@@ -120,6 +120,10 @@ the tutorial:</para>
 spreading the windows around so that you can see them simultaneously.
 Barring that, you may want to close some other applications so that
 there are fewer windows to switch between.</para>
+
+<para>(If you’d prefer to follow along with your own copy of the
+slides, they’re
+<link xlink:href="https://saxonica.github.io/SaxonJS-Tutorial-2021/presentation/">published online</link>.)</para>
 </chapter>
 
 <xi:include href="browser.xml"/>
