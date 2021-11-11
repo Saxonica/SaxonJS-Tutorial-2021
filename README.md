@@ -498,7 +498,7 @@ NodeJS express server listening; server root is /src
 `xsl` (`-Pxsl=path/to/stylesheet`) to point to the stylesheet to compile. For example:
 
 ```
-$ ./gradlew -Pxsl=exercises/ex2/ex2.xsl eej
+$ ./gradlew -Pxsl=exercises/ex02/ex02.xsl eej
 
 > Configure project :
 Building with Java version 1.8.0_231
@@ -517,7 +517,7 @@ Use the Gradle option `xsl` (`-Pxsl=path/to/stylesheet`) to point to the stylesh
 For example:
 
 ```
-$ ./gradlew -Pxsl=exercises/ex2/ex2.xsl node_xslt3
+$ ./gradlew -Pxsl=exercises/ex02/ex02.xsl node_xslt3
 
 > Configure project :
 Building with Java version 1.8.0_231
@@ -536,7 +536,7 @@ Use the Gradle option `xsl` (`-Pxsl=path/to/stylesheet`) to point to the stylesh
 For example:
 
 ```
-$ ./gradlew -Pxsl=exercises/ex2/ex2.xsl docker_xslt3
+$ ./gradlew -Pxsl=exercises/ex02/ex02.xsl docker_xslt3
 
 > Configure project :
 Building with Java version 1.8.0_231
