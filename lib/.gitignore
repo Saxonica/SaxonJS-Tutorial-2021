@@ -1,0 +1,3 @@
+# Ignore the license file. This reduces the chances that
+# it'll accidentally get committed to a public repository.
+saxon-license.lic
