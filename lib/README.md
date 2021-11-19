@@ -1,7 +1,7 @@
 # Ancillary files
 
-This directory contains a few ancillary materials, including a Saxon EE license.
+This directory contains a few ancillary materials.
 
-The Saxon license in this directory is being made available for the tutorial.
+This is the directory where the tutorial expects to find the SaxonEE
+license. If you are using SaxonEE to compile stylesheets, copy your license here.
 
-It expires on 15 November, 2021.

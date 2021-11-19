@@ -42,9 +42,12 @@ SaxonJS directly.
 
 In order to develop a SaxonJS application, you need to be able to run
 the Java version of Saxon-EE or the Node.js version of the command line
-SaxonJS tool, `xslt3.js`. The `lib` directory of this repository
-contains an unrestricted Saxon-EE license that you’re free to use in
-this tutorial and in your own experiments until it expires on 15 November, 2021.
+SaxonJS tool, `xslt3.js`. 
+
+The tutorial expects the Saxon-EE license to be in the `lib`
+directory. Copy your license there, if you want to use Saxon-EE. If
+you don’t have a Saxon-EE license, you can request an [evaluation
+license](https://saxonica.com/download/download.xml).
 
 This tutorial is focused mostly on SaxonJS running in the browser.
 Using the browser is a little easier to set up and it’s easier to write
