@@ -1,8 +1,9 @@
 # SaxonJS-Tutorial-2021, version 1.0.4
 
-Last updated on 4 November, 2021.
+Last updated on 15 July, 2024.
 
 **Table of contents**
++ [Updates](#Updates)
 + [Background](#Background)
 + [Prerequisites](#Prerequisites)
 + [Starting a web server](#Starting-a-web-server)
@@ -33,6 +34,17 @@ The tutorial is configured to run a web server on port 9000. If you
 have another application running on that port, you can edit the
 `gradle.properties` file and change `serverPort` to another value.
 Pick an unused port number larger than 1024.
+
+## Updates
+
+On 15 July 2024, we updated the tutorial to use the current version of SaxonJS,
+SaxonJS 2.6.
+
+We also replaced several SEF files in the “answers” directories that had been
+compiled with the evaluation EE license available when the tutorial was
+initially presented. An SEF file compiled with an evaluation license has an
+expiration date and those had long since expired. Apologies for any confusion
+this may have caused.
 
 ## Background
 
